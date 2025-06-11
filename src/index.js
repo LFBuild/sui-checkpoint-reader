@@ -311,7 +311,7 @@ export async function read_checkpoints({
       const file_number = +path.basename(file_path, '.chk')
 
       // if in configured range, we add it to the known checkpoints
-      if (file_number >= from && file_number <= to) {
+      if (file_number >= from && file_number <= to && !known_checkpoints.has(file_number)) {
         const buffer = readFileSync(file_path)
         known_checkpoints.set(file_number, buffer)
       }
@@ -321,7 +321,7 @@ export async function read_checkpoints({
     const recent_existing_files = get_local_checkpoints(checkpoints_folder)
     // we then try to add them all to the known checkpoints
     for (const file of recent_existing_files) {
-      if (file >= from && file <= to) {
+      if (file >= from && file <= to && !known_checkpoints.has(file)) {
         const buffer = readFileSync(
           path.join(checkpoints_folder, `${file}.chk`),
         )
@@ -387,7 +387,10 @@ export async function read_checkpoints({
               current_checkpoint_number,
             )
 
-            known_checkpoints.set(current_checkpoint_number, buffer)
+            // Only add if not already in map to prevent memory leaks
+            if (!known_checkpoints.has(current_checkpoint_number)) {
+              known_checkpoints.set(current_checkpoint_number, buffer)
+            }
           }),
         )
 
@@ -489,6 +492,8 @@ export async function read_checkpoints({
             { current_checkpoint_number },
             'It seems the node exported a corrupted checkpoint file, downloading from remote!',
           )
+          // Re-download and replace the corrupted checkpoint
+          // Always set here as we're replacing corrupted data
           known_checkpoints.set(
             current_checkpoint_number,
             await get_remote_checkpoint(current_checkpoint_number),
@@ -522,6 +527,27 @@ export async function read_checkpoints({
           })
           await process_checkpoint(parsed_checkpoint, current_checkpoint_number)
           processing_settings.current_checkpoint++
+          
+          // Clean up old checkpoints from memory periodically to prevent leaks
+          // Do cleanup every 20 processed checkpoints or when map size > 50
+          if (processing_settings.current_checkpoint % 1000 === 0 || known_checkpoints.size > 100) {
+            const keys_to_delete = []
+            for (const [key] of known_checkpoints) {
+              if (key < processing_settings.current_checkpoint) {
+                keys_to_delete.push(key)
+              }
+            }
+            if (keys_to_delete.length > 0) {
+              keys_to_delete.forEach(key => known_checkpoints.delete(key))
+              log.debug(
+                { 
+                  cleaned_up: keys_to_delete.length,
+                  map_size_after: known_checkpoints.size 
+                },
+                '[memory] cleaned up old checkpoints'
+              )
+            }
+          }
         } else {
           // checkpoint not found, we wait a bit
           if (++index_missing % 10 === 0) {
@@ -531,10 +557,13 @@ export async function read_checkpoints({
             )
 
             // since it keeps failing, force download the current
-            known_checkpoints.set(
-              current_checkpoint_number,
-              await get_remote_checkpoint(current_checkpoint_number),
-            )
+            // but only if not already in map to prevent memory leaks
+            if (!known_checkpoints.has(current_checkpoint_number)) {
+              known_checkpoints.set(
+                current_checkpoint_number,
+                await get_remote_checkpoint(current_checkpoint_number),
+              )
+            }
 
             // then flush all existing checkpoints
             const recent_existing_files =
@@ -550,7 +579,7 @@ export async function read_checkpoints({
             )
 
             for (const file of recent_existing_files) {
-              if (file >= from && file <= to) {
+              if (file >= from && file <= to && !known_checkpoints.has(file)) {
                 const buffer = readFileSync(
                   path.join(checkpoints_folder, `${file}.chk`),
                 )
