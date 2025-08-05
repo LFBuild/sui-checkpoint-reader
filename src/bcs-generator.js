@@ -207,7 +207,7 @@ function parse_type(
       }
       // Check for self-reference in deferred types
       if (deferred && type.TYPENAME === name) {
-        return `() => ${type.TYPENAME}`
+        return `bcs.lazy(() => ${type.TYPENAME})`
       }
       return type.TYPENAME
     }
@@ -234,7 +234,7 @@ function parse_type(
     primitive.match(/^[A-Z]/) &&
     primitive === name // Only wrap self-references within lazy types
   ) {
-    return `() => ${primitive}`
+    return `bcs.lazy(() => ${primitive})`
   }
   return primitive
 }
