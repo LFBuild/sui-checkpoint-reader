@@ -144,7 +144,7 @@ function generate_bcs_types(parsed_yaml) {
     .map(name => {
       const isCircular = circularTypes.has(name)
       if (isCircular) {
-        return `export const ${name} = bcs.lazy(() => ${parse_type(parsed_yaml[name], name, true)});`
+        return `export const ${name} = bcs.lazy(() => ${parse_type(parsed_yaml[name], name, true, circularTypes)});`
       } else {
         return `export const ${name} = ${parse_type(parsed_yaml[name], name)};`
       }
@@ -173,7 +173,12 @@ function getDependencies(type) {
   return Array.from(deps)
 }
 
-function parse_type(type, name = 'name', deferred = false) {
+function parse_type(
+  type,
+  name = 'name',
+  deferred = false,
+  circular_types = new Set(),
+) {
   if (name?.includes('sui_types::')) {
     const { type: funcName } = parse_function_type(name)
     const params = type.STRUCT
@@ -183,8 +188,9 @@ function parse_type(type, name = 'name', deferred = false) {
   }
   if (typeof type === 'object') {
     if (type.NEWTYPESTRUCT)
-      return parse_type(type.NEWTYPESTRUCT, name, deferred)
-    if (type.STRUCT) return parse_struct(type.STRUCT, name, deferred)
+      return parse_type(type.NEWTYPESTRUCT, name, deferred, circular_types)
+    if (type.STRUCT)
+      return parse_struct(type.STRUCT, name, deferred, circular_types)
     if (type.TYPENAME) {
       const parsed = parse_function_type(type.TYPENAME)
       if (parsed.subtypes.length > 0) {
@@ -192,17 +198,19 @@ function parse_type(type, name = 'name', deferred = false) {
       }
       return type.TYPENAME
     }
-    if (type.SEQ) return `bcs.vector(${parse_type(type.SEQ, name, deferred)})`
+    if (type.SEQ)
+      return `bcs.vector(${parse_type(type.SEQ, name, deferred, circular_types)})`
     if (type.OPTION)
-      return `bcs.option(${parse_type(type.OPTION, name, deferred)})`
+      return `bcs.option(${parse_type(type.OPTION, name, deferred, circular_types)})`
     if (type.MAP)
-      return `bcs.map(${parse_type(type.MAP.KEY, name, deferred)}, ${parse_type(type.MAP.VALUE, name, deferred)})`
+      return `bcs.map(${parse_type(type.MAP.KEY, name, deferred, circular_types)}, ${parse_type(type.MAP.VALUE, name, deferred, circular_types)})`
     if (type.TUPLE)
-      return `bcs.tuple([${type.TUPLE.map(value => parse_type(value, name, deferred)).join(', ')}])`
+      return `bcs.tuple([${type.TUPLE.map(value => parse_type(value, name, deferred, circular_types)).join(', ')}])`
     if (type.TUPLEARRAY)
-      return `bcs.fixedArray(${type.TUPLEARRAY.SIZE}, ${parse_type(type.TUPLEARRAY.CONTENT, name, deferred)})`
-    if (type.NEWTYPE) return parse_type(type.NEWTYPE, name, deferred)
-    if (type.ENUM) return parse_enum(type.ENUM, name, deferred)
+      return `bcs.fixedArray(${type.TUPLEARRAY.SIZE}, ${parse_type(type.TUPLEARRAY.CONTENT, name, deferred, circular_types)})`
+    if (type.NEWTYPE)
+      return parse_type(type.NEWTYPE, name, deferred, circular_types)
+    if (type.ENUM) return parse_enum(type.ENUM, name, deferred, circular_types)
   }
   const primitive = parse_primitive(type)
   // If it's a type reference and we're generating deferred types, wrap in function
@@ -210,29 +218,35 @@ function parse_type(type, name = 'name', deferred = false) {
     primitive !== null &&
     typeof primitive === 'string' &&
     deferred &&
-    primitive.match(/^[A-Z]/)
+    primitive.match(/^[A-Z]/) &&
+    primitive === name // Only wrap self-references within lazy types
   ) {
     return `() => ${primitive}`
   }
   return primitive
 }
 
-function parse_enum(type, name, deferred = false) {
+function parse_enum(type, name, deferred = false, circular_types = new Set()) {
   const result = Array.from({ ...type, length: Object.keys(type).length }).map(
     object => {
       const [[inner_name, value]] = Object.entries(object)
-      return `${inner_name}: ${parse_type(value, inner_name, deferred)}`
+      return `${inner_name}: ${parse_type(value, name, deferred, circular_types)}`
     },
   )
   return `bcs.enum("${name}", {${result.join(', ')}})`
 }
 
-function parse_struct(type, name, deferred = false) {
+function parse_struct(
+  type,
+  name,
+  deferred = false,
+  circular_types = new Set(),
+) {
   const fields = type
     .flatMap(object => Object.entries(object))
     .map(([inner_name, type]) => {
       if (inner_name === 'type_') inner_name = 'type'
-      return `${inner_name}: ${parse_type(type, inner_name, deferred)}`
+      return `${inner_name}: ${parse_type(type, name, deferred, circular_types)}`
     })
 
   return `bcs.struct("${name}", {${fields.join(', ')}})`
