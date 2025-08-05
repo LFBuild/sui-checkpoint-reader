@@ -100,7 +100,16 @@ function generate_bcs_types(parsed_yaml) {
         ? content.STRUCT.map(obj => Object.keys(obj)[0]).join(', ')
         : 'data'
       return `const ${type} = (type_name, ${params}) =>
-  ${parse_type(content, type)}`
+  bcs.struct(type_name, {
+    ${
+      params === 'data'
+        ? 'data: data'
+        : content.STRUCT.map(obj => {
+            const [[field_name]] = Object.entries(obj)
+            return `${field_name}: ${field_name}`
+          }).join(', ')
+    }
+  })`
     },
   )
 

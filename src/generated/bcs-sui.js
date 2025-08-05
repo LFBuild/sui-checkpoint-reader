@@ -1,8 +1,8 @@
 import { bcs } from '@mysten/bcs'
 const Envelope = (type_name, data, auth_signature) =>
-  bcs.struct('Envelope', {
-    data: CheckpointSummary,
-    auth_signature: AuthorityQuorumSignInfo,
+  bcs.struct(type_name, {
+    data,
+    auth_signature,
   })
 
 export const AccountAddress = bcs.fixedArray(32, bcs.u8())
