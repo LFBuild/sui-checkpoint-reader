@@ -7,6 +7,63 @@
       }
     }
   },
+  "AccumulatorAddress": {
+    "STRUCT": [
+      {
+        "address": {
+          "TYPENAME": "SuiAddress"
+        }
+      },
+      {
+        "ty": {
+          "TYPENAME": "TypeTag"
+        }
+      }
+    ]
+  },
+  "AccumulatorOperation": {
+    "ENUM": {
+      "0": {
+        "Merge": "UNIT"
+      },
+      "1": {
+        "Split": "UNIT"
+      }
+    }
+  },
+  "AccumulatorValue": {
+    "ENUM": {
+      "0": {
+        "Integer": {
+          "NEWTYPE": "U64"
+        }
+      },
+      "1": {
+        "IntegerTuple": {
+          "TUPLE": ["U64", "U64"]
+        }
+      }
+    }
+  },
+  "AccumulatorWriteV1": {
+    "STRUCT": [
+      {
+        "address": {
+          "TYPENAME": "AccumulatorAddress"
+        }
+      },
+      {
+        "operation": {
+          "TYPENAME": "AccumulatorOperation"
+        }
+      },
+      {
+        "value": {
+          "TYPENAME": "AccumulatorValue"
+        }
+      }
+    ]
+  },
   "ActiveJwk": {
     "STRUCT": [
       {
@@ -47,17 +104,6 @@
       "3": {
         "NestedResult": {
           "TUPLE": ["U16", "U16"]
-        }
-      }
-    }
-  },
-  "Authenticator": {
-    "ENUM": {
-      "0": {
-        "SingleOwner": {
-          "NEWTYPE": {
-            "TYPENAME": "SuiAddress"
-          }
         }
       }
     }
@@ -117,6 +163,25 @@
       }
     ]
   },
+  "BalanceWithdrawArg": {
+    "STRUCT": [
+      {
+        "reservation": {
+          "TYPENAME": "Reservation"
+        }
+      },
+      {
+        "type_param": {
+          "TYPENAME": "WithdrawTypeParam"
+        }
+      },
+      {
+        "withdraw_from": {
+          "TYPENAME": "WithdrawFrom"
+        }
+      }
+    ]
+  },
   "CallArg": {
     "ENUM": {
       "0": {
@@ -130,6 +195,13 @@
         "Object": {
           "NEWTYPE": {
             "TYPENAME": "ObjectArg"
+          }
+        }
+      },
+      "2": {
+        "BalanceWithdraw": {
+          "NEWTYPE": {
+            "TYPENAME": "BalanceWithdrawArg"
           }
         }
       }
@@ -516,6 +588,12 @@
       },
       "12": {
         "InvalidArgumentArity": "UNIT"
+      },
+      "13": {
+        "InvalidTransferObject": "UNIT"
+      },
+      "14": {
+        "InvalidMakeMoveVecNonObjectArgument": "UNIT"
       }
     }
   },
@@ -878,6 +956,9 @@
             "TYPENAME": "StoredExecutionTimeObservations"
           }
         }
+      },
+      "8": {
+        "AccumulatorRootCreate": "UNIT"
       }
     }
   },
@@ -1171,6 +1252,36 @@
       },
       "36": {
         "ExecutionCancelledDueToRandomnessUnavailable": "UNIT"
+      },
+      "37": {
+        "MoveVectorElemTooBig": {
+          "STRUCT": [
+            {
+              "value_size": "U64"
+            },
+            {
+              "max_scaled_size": "U64"
+            }
+          ]
+        }
+      },
+      "38": {
+        "MoveRawValueTooBig": {
+          "STRUCT": [
+            {
+              "value_size": "U64"
+            },
+            {
+              "max_scaled_size": "U64"
+            }
+          ]
+        }
+      },
+      "39": {
+        "InvalidLinkage": "UNIT"
+      },
+      "40": {
+        "InsufficientBalanceForWithdraw": "UNIT"
       }
     }
   },
@@ -1743,6 +1854,13 @@
             ]
           }
         }
+      },
+      "3": {
+        "AccumulatorWriteV1": {
+          "NEWTYPE": {
+            "TYPENAME": "AccumulatorWriteV1"
+          }
+        }
       }
     }
   },
@@ -1777,7 +1895,7 @@
         "Immutable": "UNIT"
       },
       "4": {
-        "ConsensusV2": {
+        "ConsensusAddressOwner": {
           "STRUCT": [
             {
               "start_version": {
@@ -1785,8 +1903,8 @@
               }
             },
             {
-              "authenticator": {
-                "TYPENAME": "Authenticator"
+              "owner": {
+                "TYPENAME": "SuiAddress"
               }
             }
           ]
@@ -1974,6 +2092,18 @@
         }
       }
     ]
+  },
+  "Reservation": {
+    "ENUM": {
+      "0": {
+        "EntireBalance": "UNIT"
+      },
+      "1": {
+        "MaxAmountU64": {
+          "NEWTYPE": "U64"
+        }
+      }
+    }
   },
   "SenderSignedData": {
     "NEWTYPESTRUCT": {
@@ -2539,6 +2669,13 @@
             "TYPENAME": "ConsensusCommitPrologueV4"
           }
         }
+      },
+      "10": {
+        "ProgrammableSystemTransaction": {
+          "NEWTYPE": {
+            "TYPENAME": "ProgrammableTransaction"
+          }
+        }
       }
     }
   },
@@ -2702,14 +2839,14 @@
         }
       },
       "1": {
-        "MutateDeleted": {
+        "MutateConsensusStreamEnded": {
           "NEWTYPE": {
             "TYPENAME": "SequenceNumber"
           }
         }
       },
       "2": {
-        "ReadDeleted": {
+        "ReadConsensusStreamEnded": {
           "NEWTYPE": {
             "TYPENAME": "SequenceNumber"
           }
@@ -2740,6 +2877,24 @@
         }
       }
     ]
+  },
+  "WithdrawFrom": {
+    "ENUM": {
+      "0": {
+        "Sender": "UNIT"
+      }
+    }
+  },
+  "WithdrawTypeParam": {
+    "ENUM": {
+      "0": {
+        "Balance": {
+          "NEWTYPE": {
+            "TYPENAME": "TypeInput"
+          }
+        }
+      }
+    }
   },
   "ZkLoginAuthenticatorAsBytes": {
     "NEWTYPESTRUCT": {

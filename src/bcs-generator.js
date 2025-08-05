@@ -2,7 +2,7 @@ import { writeFile } from 'fs/promises'
 
 import { parse } from 'yaml'
 
-const VERSION = 'testnet-v1.46.0'
+const VERSION = 'testnet-v1.53.1'
 const YAML_URL =
   'https://raw.githubusercontent.com/MystenLabs/sui/{version}/crates/sui-core/tests/staged/sui.yaml'
 
@@ -100,16 +100,55 @@ function generate_bcs_types(parsed_yaml) {
         ? content.STRUCT.map(obj => Object.keys(obj)[0]).join(', ')
         : 'data'
       return `const ${type} = (name, ${params}) =>
-  ${parse_type(content, name)}`
+  ${parse_type(content, type)}`
     },
   )
 
-  // Generate ordered content
+  // Detect circular dependencies
+  const circularTypes = new Set()
+  const visiting = new Set()
+
+  function detectCircular(type_name, path = new Set()) {
+    if (path.has(type_name)) {
+      // Found a cycle, mark all types in the path as circular
+      path.forEach(t => circularTypes.add(t))
+      circularTypes.add(type_name)
+      return true
+    }
+
+    if (visiting.has(type_name)) return false
+    visiting.add(type_name)
+
+    const deps = typeGraph.get(type_name) || []
+    const newPath = new Set([...path, type_name])
+
+    for (const dep of deps) {
+      if (typeGraph.has(dep)) {
+        detectCircular(dep, newPath)
+      }
+    }
+
+    return false
+  }
+
+  // Check for circular dependencies
+  for (const type of typeGraph.keys()) {
+    if (!visiting.has(type) && !type.includes('sui_types::')) {
+      detectCircular(type)
+    }
+  }
+
+  // Generate content with special handling for circular types
   const content = orderedTypes
     .filter(name => !name.includes('sui_types::'))
-    .map(
-      name => `export const ${name} = ${parse_type(parsed_yaml[name], name)};`,
-    )
+    .map(name => {
+      const isCircular = circularTypes.has(name)
+      if (isCircular) {
+        return `export const ${name} = bcs.lazy(() => ${parse_type(parsed_yaml[name], name, true)});`
+      } else {
+        return `export const ${name} = ${parse_type(parsed_yaml[name], name)};`
+      }
+    })
 
   return `import { bcs } from '@mysten/bcs';
 ${function_types.join('\n\n')}
@@ -134,7 +173,7 @@ function getDependencies(type) {
   return Array.from(deps)
 }
 
-function parse_type(type, name = 'name') {
+function parse_type(type, name = 'name', deferred = false) {
   if (name?.includes('sui_types::')) {
     const { type: funcName } = parse_function_type(name)
     const params = type.STRUCT
@@ -143,8 +182,9 @@ function parse_type(type, name = 'name') {
     return `${funcName}('${name}', ${params})`
   }
   if (typeof type === 'object') {
-    if (type.NEWTYPESTRUCT) return parse_type(type.NEWTYPESTRUCT, name)
-    if (type.STRUCT) return parse_struct(type.STRUCT, name)
+    if (type.NEWTYPESTRUCT)
+      return parse_type(type.NEWTYPESTRUCT, name, deferred)
+    if (type.STRUCT) return parse_struct(type.STRUCT, name, deferred)
     if (type.TYPENAME) {
       const parsed = parse_function_type(type.TYPENAME)
       if (parsed.subtypes.length > 0) {
@@ -152,36 +192,47 @@ function parse_type(type, name = 'name') {
       }
       return type.TYPENAME
     }
-    if (type.SEQ) return `bcs.vector(${parse_type(type.SEQ, name)})`
-    if (type.OPTION) return `bcs.option(${parse_type(type.OPTION, name)})`
+    if (type.SEQ) return `bcs.vector(${parse_type(type.SEQ, name, deferred)})`
+    if (type.OPTION)
+      return `bcs.option(${parse_type(type.OPTION, name, deferred)})`
     if (type.MAP)
-      return `bcs.map(${parse_type(type.MAP.KEY, name)}, ${parse_type(type.MAP.VALUE, name)})`
+      return `bcs.map(${parse_type(type.MAP.KEY, name, deferred)}, ${parse_type(type.MAP.VALUE, name, deferred)})`
     if (type.TUPLE)
-      return `bcs.tuple([${type.TUPLE.map(value => parse_type(value, name)).join(', ')}])`
+      return `bcs.tuple([${type.TUPLE.map(value => parse_type(value, name, deferred)).join(', ')}])`
     if (type.TUPLEARRAY)
-      return `bcs.fixedArray(${type.TUPLEARRAY.SIZE}, ${parse_type(type.TUPLEARRAY.CONTENT, name)})`
-    if (type.NEWTYPE) return parse_type(type.NEWTYPE, name)
-    if (type.ENUM) return parse_enum(type.ENUM, name)
+      return `bcs.fixedArray(${type.TUPLEARRAY.SIZE}, ${parse_type(type.TUPLEARRAY.CONTENT, name, deferred)})`
+    if (type.NEWTYPE) return parse_type(type.NEWTYPE, name, deferred)
+    if (type.ENUM) return parse_enum(type.ENUM, name, deferred)
   }
-  return parse_primitive(type)
+  const primitive = parse_primitive(type)
+  // If it's a type reference and we're generating deferred types, wrap in function
+  if (
+    primitive !== null &&
+    typeof primitive === 'string' &&
+    deferred &&
+    primitive.match(/^[A-Z]/)
+  ) {
+    return `() => ${primitive}`
+  }
+  return primitive
 }
 
-function parse_enum(type, name) {
+function parse_enum(type, name, deferred = false) {
   const result = Array.from({ ...type, length: Object.keys(type).length }).map(
     object => {
       const [[inner_name, value]] = Object.entries(object)
-      return `${inner_name}: ${parse_type(value, inner_name)}`
+      return `${inner_name}: ${parse_type(value, inner_name, deferred)}`
     },
   )
   return `bcs.enum("${name}", {${result.join(', ')}})`
 }
 
-function parse_struct(type, name) {
+function parse_struct(type, name, deferred = false) {
   const fields = type
     .flatMap(object => Object.entries(object))
     .map(([inner_name, type]) => {
       if (inner_name === 'type_') inner_name = 'type'
-      return `${inner_name}: ${parse_type(type, inner_name)}`
+      return `${inner_name}: ${parse_type(type, inner_name, deferred)}`
     })
 
   return `bcs.struct("${name}", {${fields.join(', ')}})`

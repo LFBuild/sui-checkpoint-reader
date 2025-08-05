@@ -1,11 +1,51 @@
 import { bcs } from '@mysten/bcs'
 const Envelope = (name, data, auth_signature) =>
-  bcs.struct(name, {
-    data,
-    auth_signature,
+  bcs.struct('Envelope', {
+    data: CheckpointSummary,
+    auth_signature: AuthorityQuorumSignInfo,
   })
 
 export const AccountAddress = bcs.fixedArray(32, bcs.u8())
+export const SuiAddress = bcs.fixedArray(32, bcs.u8())
+export const StructTag = bcs.lazy(() =>
+  bcs.struct('StructTag', {
+    address: AccountAddress,
+    module: bcs.string(),
+    name: bcs.string(),
+    type_args: bcs.vector(TypeTag),
+  }),
+)
+export const TypeTag = bcs.lazy(() =>
+  bcs.enum('TypeTag', {
+    Bool: null,
+    U8: null,
+    U64: null,
+    U128: null,
+    Address: null,
+    Signer: null,
+    Vector: TypeTag,
+    struct: StructTag,
+    U16: null,
+    U32: null,
+    U256: null,
+  }),
+)
+export const AccumulatorAddress = bcs.lazy(() =>
+  bcs.struct('AccumulatorAddress', { address: SuiAddress, ty: TypeTag }),
+)
+export const AccumulatorOperation = bcs.enum('AccumulatorOperation', {
+  Merge: null,
+  Split: null,
+})
+export const AccumulatorValue = bcs.enum('AccumulatorValue', {
+  Integer: bcs.u64(),
+  IntegerTuple: bcs.tuple([bcs.u64(), bcs.u64()]),
+})
+export const AccumulatorWriteV1 = bcs.struct('AccumulatorWriteV1', {
+  address: AccumulatorAddress,
+  operation: AccumulatorOperation,
+  value: AccumulatorValue,
+})
 export const JwkId = bcs.struct('JwkId', {
   iss: bcs.string(),
   kid: bcs.string(),
@@ -29,10 +69,6 @@ export const Argument = bcs.enum('Argument', {
   Result: bcs.u16(),
   NestedResult: bcs.tuple([bcs.u16(), bcs.u16()]),
 })
-export const SuiAddress = bcs.fixedArray(32, bcs.u8())
-export const Authenticator = bcs.enum('Authenticator', {
-  SingleOwner: SuiAddress,
-})
 export const SequenceNumber = bcs.u64()
 export const AuthenticatorStateExpire = bcs.struct('AuthenticatorStateExpire', {
   min_epoch: bcs.u64(),
@@ -50,6 +86,44 @@ export const AuthorityQuorumSignInfo = bcs.struct('AuthorityQuorumSignInfo', {
   signature: bcs.fixedArray(48, bcs.u8()),
   signers_map: bcs.vector(bcs.u8()),
 })
+export const Reservation = bcs.enum('Reservation', {
+  EntireBalance: null,
+  MaxAmountU64: bcs.u64(),
+})
+export const StructInput = bcs.lazy(() =>
+  bcs.struct('StructInput', {
+    address: AccountAddress,
+    module: bcs.string(),
+    name: bcs.string(),
+    type_args: bcs.vector(TypeInput),
+  }),
+)
+export const TypeInput = bcs.lazy(() =>
+  bcs.enum('TypeInput', {
+    bool: null,
+    U8: null,
+    U64: null,
+    U128: null,
+    Address: null,
+    Signer: null,
+    Vector: TypeInput,
+    Struct: StructInput,
+    U16: null,
+    U32: null,
+    U256: null,
+  }),
+)
+export const WithdrawTypeParam = bcs.lazy(() =>
+  bcs.enum('WithdrawTypeParam', { Balance: TypeInput }),
+)
+export const WithdrawFrom = bcs.enum('WithdrawFrom', { Sender: null })
+export const BalanceWithdrawArg = bcs.lazy(() =>
+  bcs.struct('BalanceWithdrawArg', {
+    reservation: Reservation,
+    type_param: WithdrawTypeParam,
+    withdraw_from: WithdrawFrom,
+  }),
+)
 export const ObjectID = AccountAddress
 export const ObjectDigest = Digest
 export const ObjectArg = bcs.enum('ObjectArg', {
@@ -64,6 +138,7 @@ export const ObjectArg = bcs.enum('ObjectArg', {
 export const CallArg = bcs.enum('CallArg', {
   Pure: bcs.vector(bcs.u8()),
   Object: ObjectArg,
+  BalanceWithdraw: BalanceWithdrawArg,
 })
 export const CheckpointDigest = Digest
 export const ChainIdentifier = CheckpointDigest
@@ -135,25 +210,6 @@ export const Intent = bcs.struct('Intent', {
   version: bcs.u8(),
   app_id: bcs.u8(),
 })
-export const TypeInput = bcs.enum('TypeInput', {
-  bool: null,
-  u8: null,
-  u64: null,
-  u128: null,
-  address: null,
-  signer: null,
-  vector: bcs.lazy(() => TypeInput),
-  struct: bcs.lazy(() => StructInput),
-  u16: null,
-  u32: null,
-  u256: null,
-})
-export const StructInput = bcs.struct('StructInput', {
-  address: AccountAddress,
-  module: bcs.string(),
-  name: bcs.string(),
-  type_args: bcs.vector(TypeInput),
-})
 export const ProgrammableMoveCall = bcs.struct('ProgrammableMoveCall', {
   package: ObjectID,
   module: bcs.string(),
@@ -178,25 +234,6 @@ export const Command = bcs.enum('Command', {
 export const ProgrammableTransaction = bcs.struct('ProgrammableTransaction', {
   inputs: bcs.vector(CallArg),
   commands: bcs.vector(Command),
-})
-export const TypeTag = bcs.enum('TypeTag', {
-  Bool: null,
-  U8: null,
-  U64: null,
-  U128: null,
-  Address: null,
-  Signer: null,
-  Vector: bcs.lazy(() => TypeTag),
-  struct: bcs.lazy(() => StructTag),
-  U16: null,
-  U32: null,
-  U256: null,
-})
-export const StructTag = bcs.struct('StructTag', {
-  address: AccountAddress,
-  module: bcs.string(),
-  name: bcs.string(),
-  type_args: bcs.vector(TypeTag),
 })
 export const MoveObjectType_ = bcs.enum('MoveObjectType_', {
   Other: StructTag,
@@ -233,9 +270,9 @@ export const Owner = bcs.enum('Owner', {
   ObjectOwner: SuiAddress,
   Shared: bcs.struct('Shared', { initial_shared_version: SequenceNumber }),
   Immutable: null,
-  ConsensusV2: bcs.struct('ConsensusV2', {
+  ConsensusAddressOwner: bcs.struct('ConsensusAddressOwner', {
     start_version: SequenceNumber,
-    authenticator: Authenticator,
+    owner: SuiAddress,
   }),
 })
 export const GenesisObject = bcs.enum('GenesisObject', {
@@ -290,6 +327,7 @@ export const EndOfEpochTransactionKind = bcs.enum('EndOfEpochTransactionKind', {
   BridgeStateCreate: ChainIdentifier,
   BridgeCommitteeInit: SequenceNumber,
   StoreExecutionTimeObservations: StoredExecutionTimeObservations,
+  AccumulatorRootCreate: null,
 })
 export const RandomnessRound = bcs.u64()
 export const RandomnessStateUpdate = bcs.struct('RandomnessStateUpdate', {
@@ -363,6 +401,7 @@ export const TransactionKind = bcs.enum('TransactionKind', {
   ConsensusCommitPrologueV2,
   ConsensusCommitPrologueV3,
   ConsensusCommitPrologueV4,
+  ProgrammableSystemTransaction: ProgrammableTransaction,
 })
 export const GasData = bcs.struct('GasData', {
   payment: bcs.vector(bcs.tuple([ObjectID, SequenceNumber, ObjectDigest])),
@@ -423,6 +462,8 @@ export const CommandArgumentError = bcs.enum('CommandArgumentError', {
   InvalidObjectByMutRef: null,
   SharedObjectOperationNotAllowed: null,
   InvalidArgumentArity: null,
+  InvalidTransferObject: null,
+  InvalidMakeMoveVecNonObjectArgument: null,
 })
 export const TypeArgumentError = bcs.enum('TypeArgumentError', {
   TypeNotFound: null,
@@ -520,6 +561,16 @@ export const ExecutionFailureStatus = bcs.enum('ExecutionFailureStatus', {
     coin_type: bcs.string(),
   }),
   ExecutionCancelledDueToRandomnessUnavailable: null,
+  MoveVectorElemTooBig: bcs.struct('MoveVectorElemTooBig', {
+    value_size: bcs.u64(),
+    max_scaled_size: bcs.u64(),
+  }),
+  MoveRawValueTooBig: bcs.struct('MoveRawValueTooBig', {
+    value_size: bcs.u64(),
+    max_scaled_size: bcs.u64(),
+  }),
+  InvalidLinkage: null,
+  InsufficientBalanceForWithdraw: null,
 })
 export const ExecutionStatus = bcs.enum('ExecutionStatus', {
   Success: null,
@@ -567,6 +618,7 @@ export const ObjectOut = bcs.enum('ObjectOut', {
   NotExist: null,
   ObjectWrite: bcs.tuple([ObjectDigest, Owner]),
   PackageWrite: bcs.tuple([SequenceNumber, ObjectDigest]),
+  AccumulatorWriteV1,
 })
 export const IDOperation = bcs.enum('IDOperation', {
   None: null,
@@ -580,8 +632,8 @@ export const EffectsObjectChange = bcs.struct('EffectsObjectChange', {
 })
 export const UnchangedSharedKind = bcs.enum('UnchangedSharedKind', {
   ReadOnlyRoot: bcs.tuple([SequenceNumber, ObjectDigest]),
-  MutateDeleted: SequenceNumber,
-  ReadDeleted: SequenceNumber,
+  MutateConsensusStreamEnded: SequenceNumber,
+  ReadConsensusStreamEnded: SequenceNumber,
   Cancelled: SequenceNumber,
   PerEpochConfig: null,
 })
