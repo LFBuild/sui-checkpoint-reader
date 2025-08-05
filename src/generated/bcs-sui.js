@@ -128,7 +128,7 @@ export const ObjectID = AccountAddress
 export const ObjectDigest = Digest
 export const ObjectArg = bcs.enum('ObjectArg', {
   ImmOrOwnedObject: bcs.tuple([ObjectID, SequenceNumber, ObjectDigest]),
-  SharedObject: bcs.struct('ObjectArg', {
+  SharedObject: bcs.struct('SharedObject', {
     id: ObjectID,
     initial_shared_version: SequenceNumber,
     mutable: bcs.bool(),
@@ -268,15 +268,15 @@ export const Data = bcs.enum('Data', { Move: MoveObject, Package: MovePackage })
 export const Owner = bcs.enum('Owner', {
   AddressOwner: SuiAddress,
   ObjectOwner: SuiAddress,
-  Shared: bcs.struct('Owner', { initial_shared_version: SequenceNumber }),
+  Shared: bcs.struct('Shared', { initial_shared_version: SequenceNumber }),
   Immutable: null,
-  ConsensusAddressOwner: bcs.struct('Owner', {
+  ConsensusAddressOwner: bcs.struct('ConsensusAddressOwner', {
     start_version: SequenceNumber,
     owner: SuiAddress,
   }),
 })
 export const GenesisObject = bcs.enum('GenesisObject', {
-  RawObject: bcs.struct('GenesisObject', { data: Data, owner: Owner }),
+  RawObject: bcs.struct('RawObject', { data: Data, owner: Owner }),
 })
 export const GenesisTransaction = bcs.struct('GenesisTransaction', {
   objects: bcs.vector(GenesisObject),
@@ -289,7 +289,7 @@ export const ConsensusCommitPrologue = bcs.struct('ConsensusCommitPrologue', {
 export const ExecutionTimeObservationKey = bcs.enum(
   'ExecutionTimeObservationKey',
   {
-    MoveEntryPoint: bcs.struct('ExecutionTimeObservationKey', {
+    MoveEntryPoint: bcs.struct('MoveEntryPoint', {
       package: ObjectID,
       module: bcs.string(),
       function: bcs.string(),
@@ -448,12 +448,12 @@ export const CommandArgumentError = bcs.enum('CommandArgumentError', {
   InvalidBCSBytes: null,
   InvalidUsageOfPureArg: null,
   InvalidArgumentToPrivateEntryFunction: null,
-  IndexOutOfBounds: bcs.struct('CommandArgumentError', { idx: bcs.u16() }),
-  SecondaryIndexOutOfBounds: bcs.struct('CommandArgumentError', {
+  IndexOutOfBounds: bcs.struct('IndexOutOfBounds', { idx: bcs.u16() }),
+  SecondaryIndexOutOfBounds: bcs.struct('SecondaryIndexOutOfBounds', {
     result_idx: bcs.u16(),
     secondary_idx: bcs.u16(),
   }),
-  InvalidResultArity: bcs.struct('CommandArgumentError', {
+  InvalidResultArity: bcs.struct('InvalidResultArity', {
     result_idx: bcs.u16(),
   }),
   InvalidGasCoinUsage: null,
@@ -470,16 +470,18 @@ export const TypeArgumentError = bcs.enum('TypeArgumentError', {
   ConstraintNotSatisfied: null,
 })
 export const PackageUpgradeError = bcs.enum('PackageUpgradeError', {
-  UnableToFetchPackage: bcs.struct('PackageUpgradeError', {
+  UnableToFetchPackage: bcs.struct('UnableToFetchPackage', {
     package_id: ObjectID,
   }),
-  NotAPackage: bcs.struct('PackageUpgradeError', { object_id: ObjectID }),
+  NotAPackage: bcs.struct('NotAPackage', { object_id: ObjectID }),
   IncompatibleUpgrade: null,
-  DigestDoesNotMatch: bcs.struct('PackageUpgradeError', {
+  DigestDoesNotMatch: bcs.struct('DigestDoesNotMatch', {
     digest: bcs.vector(bcs.u8()),
   }),
-  UnknownUpgradePolicy: bcs.struct('PackageUpgradeError', { policy: bcs.u8() }),
-  PackageIDDoesNotMatch: bcs.struct('PackageUpgradeError', {
+  UnknownUpgradePolicy: bcs.struct('UnknownUpgradePolicy', {
+    policy: bcs.u8(),
+  }),
+  PackageIDDoesNotMatch: bcs.struct('PackageIDDoesNotMatch', {
     package_id: ObjectID,
     ticket_id: ObjectID,
   }),
@@ -490,15 +492,15 @@ export const ExecutionFailureStatus = bcs.enum('ExecutionFailureStatus', {
   InvalidGasObject: null,
   InvariantViolation: null,
   FeatureNotYetSupported: null,
-  MoveObjectTooBig: bcs.struct('ExecutionFailureStatus', {
+  MoveObjectTooBig: bcs.struct('MoveObjectTooBig', {
     object_size: bcs.u64(),
     max_object_size: bcs.u64(),
   }),
-  MovePackageTooBig: bcs.struct('ExecutionFailureStatus', {
+  MovePackageTooBig: bcs.struct('MovePackageTooBig', {
     object_size: bcs.u64(),
     max_object_size: bcs.u64(),
   }),
-  CircularObjectOwnership: bcs.struct('ExecutionFailureStatus', {
+  CircularObjectOwnership: bcs.struct('CircularObjectOwnership', {
     object: ObjectID,
   }),
   InsufficientCoinBalance: null,
@@ -513,32 +515,33 @@ export const ExecutionFailureStatus = bcs.enum('ExecutionFailureStatus', {
   ArityMismatch: null,
   TypeArityMismatch: null,
   NonEntryFunctionInvoked: null,
-  CommandArgumentError: bcs.struct('ExecutionFailureStatus', {
+  CommandArgumentError: bcs.struct('CommandArgumentError', {
     arg_idx: bcs.u16(),
     kind: CommandArgumentError,
   }),
-  TypeArgumentError: bcs.struct('ExecutionFailureStatus', {
+  TypeArgumentError: bcs.struct('TypeArgumentError', {
     argument_idx: bcs.u16(),
     kind: TypeArgumentError,
   }),
-  UnusedValueWithoutDrop: bcs.struct('ExecutionFailureStatus', {
+  UnusedValueWithoutDrop: bcs.struct('UnusedValueWithoutDrop', {
     result_idx: bcs.u16(),
     secondary_idx: bcs.u16(),
   }),
-  InvalidPublicFunctionReturnType: bcs.struct('ExecutionFailureStatus', {
-    idx: bcs.u16(),
-  }),
+  InvalidPublicFunctionReturnType: bcs.struct(
+    'InvalidPublicFunctionReturnType',
+    { idx: bcs.u16() },
+  ),
   InvalidTransferObject: null,
-  EffectsTooLarge: bcs.struct('ExecutionFailureStatus', {
+  EffectsTooLarge: bcs.struct('EffectsTooLarge', {
     current_size: bcs.u64(),
     max_size: bcs.u64(),
   }),
   PublishUpgradeMissingDependency: null,
   PublishUpgradeDependencyDowngrade: null,
-  PackageUpgradeError: bcs.struct('ExecutionFailureStatus', {
+  PackageUpgradeError: bcs.struct('PackageUpgradeError', {
     upgrade_error: PackageUpgradeError,
   }),
-  WrittenObjectsTooLarge: bcs.struct('ExecutionFailureStatus', {
+  WrittenObjectsTooLarge: bcs.struct('WrittenObjectsTooLarge', {
     current_size: bcs.u64(),
     max_size: bcs.u64(),
   }),
@@ -547,22 +550,22 @@ export const ExecutionFailureStatus = bcs.enum('ExecutionFailureStatus', {
   SharedObjectOperationNotAllowed: null,
   InputObjectDeleted: null,
   ExecutionCancelledDueToSharedObjectCongestion: bcs.struct(
-    'ExecutionFailureStatus',
+    'ExecutionCancelledDueToSharedObjectCongestion',
     { congested_objects: CongestedObjects },
   ),
-  AddressDeniedForCoin: bcs.struct('ExecutionFailureStatus', {
+  AddressDeniedForCoin: bcs.struct('AddressDeniedForCoin', {
     address: SuiAddress,
     coin_type: bcs.string(),
   }),
-  CoinTypeGlobalPause: bcs.struct('ExecutionFailureStatus', {
+  CoinTypeGlobalPause: bcs.struct('CoinTypeGlobalPause', {
     coin_type: bcs.string(),
   }),
   ExecutionCancelledDueToRandomnessUnavailable: null,
-  MoveVectorElemTooBig: bcs.struct('ExecutionFailureStatus', {
+  MoveVectorElemTooBig: bcs.struct('MoveVectorElemTooBig', {
     value_size: bcs.u64(),
     max_scaled_size: bcs.u64(),
   }),
-  MoveRawValueTooBig: bcs.struct('ExecutionFailureStatus', {
+  MoveRawValueTooBig: bcs.struct('MoveRawValueTooBig', {
     value_size: bcs.u64(),
     max_scaled_size: bcs.u64(),
   }),
@@ -571,7 +574,7 @@ export const ExecutionFailureStatus = bcs.enum('ExecutionFailureStatus', {
 })
 export const ExecutionStatus = bcs.enum('ExecutionStatus', {
   Success: null,
-  Failure: bcs.struct('ExecutionStatus', {
+  Failure: bcs.struct('Failure', {
     error: ExecutionFailureStatus,
     command: bcs.option(bcs.u64()),
   }),
@@ -671,11 +674,7 @@ export const Object = bcs.struct('Object', {
   storage_rebate: bcs.u64(),
 })
 export const CheckpointTransaction = bcs.struct('CheckpointTransaction', {
-  transaction: Envelope(
-    'CheckpointTransaction',
-    SenderSignedData,
-    EmptySignInfo,
-  ),
+  transaction: Envelope('transaction', SenderSignedData, EmptySignInfo),
   effects: TransactionEffects,
   events: bcs.option(TransactionEvents),
   input_objects: bcs.vector(Object),
@@ -683,7 +682,7 @@ export const CheckpointTransaction = bcs.struct('CheckpointTransaction', {
 })
 export const CheckpointData = bcs.struct('CheckpointData', {
   checkpoint_summary: Envelope(
-    'CheckpointData',
+    'checkpoint_summary',
     CheckpointSummary,
     AuthorityQuorumSignInfo,
   ),
@@ -703,7 +702,7 @@ export const DeleteKind = bcs.enum('DeleteKind', {
   Wrap: null,
 })
 export const ExecutionData = bcs.struct('ExecutionData', {
-  transaction: Envelope('ExecutionData', SenderSignedData, EmptySignInfo),
+  transaction: Envelope('transaction', SenderSignedData, EmptySignInfo),
   effects: TransactionEffects,
 })
 export const FullCheckpointContents = bcs.struct('FullCheckpointContents', {

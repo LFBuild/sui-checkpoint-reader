@@ -221,7 +221,7 @@ function parse_enum(type, name, deferred = false) {
   const result = Array.from({ ...type, length: Object.keys(type).length }).map(
     object => {
       const [[inner_name, value]] = Object.entries(object)
-      return `${inner_name}: ${parse_type(value, name, deferred)}`
+      return `${inner_name}: ${parse_type(value, inner_name, deferred)}`
     },
   )
   return `bcs.enum("${name}", {${result.join(', ')}})`
@@ -232,7 +232,7 @@ function parse_struct(type, name, deferred = false) {
     .flatMap(object => Object.entries(object))
     .map(([inner_name, type]) => {
       if (inner_name === 'type_') inner_name = 'type'
-      return `${inner_name}: ${parse_type(type, name, deferred)}`
+      return `${inner_name}: ${parse_type(type, inner_name, deferred)}`
     })
 
   return `bcs.struct("${name}", {${fields.join(', ')}})`
