@@ -196,6 +196,10 @@ function parse_type(
       if (parsed.subtypes.length > 0) {
         return `${parsed.type}('${name}', ${parsed.subtypes.map(st => st.type).join(', ')})`
       }
+      // Check for self-reference in deferred types
+      if (deferred && type.TYPENAME === name) {
+        return `() => ${type.TYPENAME}`
+      }
       return type.TYPENAME
     }
     if (type.SEQ)
@@ -230,6 +234,7 @@ function parse_enum(type, name, deferred = false, circular_types = new Set()) {
   const result = Array.from({ ...type, length: Object.keys(type).length }).map(
     object => {
       const [[inner_name, value]] = Object.entries(object)
+
       return `${inner_name}: ${parse_type(value, name, deferred, circular_types)}`
     },
   )
