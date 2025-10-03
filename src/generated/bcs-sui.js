@@ -37,9 +37,11 @@ export const AccumulatorOperation = bcs.enum('AccumulatorOperation', {
   Merge: null,
   Split: null,
 })
+export const Digest = bcs.vector(bcs.u8())
 export const AccumulatorValue = bcs.enum('AccumulatorValue', {
   Integer: bcs.u64(),
   IntegerTuple: bcs.tuple([bcs.u64(), bcs.u64()]),
+  EventDigest: bcs.tuple([bcs.u64(), Digest]),
 })
 export const AccumulatorWriteV1 = bcs.struct('AccumulatorWriteV1', {
   address: AccumulatorAddress,
@@ -61,7 +63,6 @@ export const ActiveJwk = bcs.struct('ActiveJwk', {
   jwk: JWK,
   epoch: bcs.u64(),
 })
-export const Digest = bcs.vector(bcs.u8())
 export const AdditionalConsensusStateDigest = Digest
 export const Argument = bcs.enum('Argument', {
   GasCoin: null,
@@ -85,6 +86,17 @@ export const AuthorityQuorumSignInfo = bcs.struct('AuthorityQuorumSignInfo', {
   epoch: bcs.u64(),
   signature: bcs.fixedArray(48, bcs.u8()),
   signers_map: bcs.vector(bcs.u8()),
+})
+export const ObjectID = AccountAddress
+export const ObjectDigest = Digest
+export const ObjectArg = bcs.enum('ObjectArg', {
+  ImmOrOwnedObject: bcs.tuple([ObjectID, SequenceNumber, ObjectDigest]),
+  SharedObject: bcs.struct('ObjectArg', {
+    id: ObjectID,
+    initial_shared_version: SequenceNumber,
+    mutable: bcs.bool(),
+  }),
+  Receiving: bcs.tuple([ObjectID, SequenceNumber, ObjectDigest]),
 })
 export const Reservation = bcs.enum('Reservation', {
   EntireBalance: null,
@@ -113,33 +125,24 @@ export const TypeInput = bcs.lazy(() =>
     U256: null,
   }),
 )
-export const WithdrawTypeParam = bcs.lazy(() =>
-  bcs.enum('WithdrawTypeParam', { Balance: TypeInput }),
+export const WithdrawalTypeArg = bcs.lazy(() =>
+  bcs.enum('WithdrawalTypeArg', { Balance: TypeInput }),
 )
 export const WithdrawFrom = bcs.enum('WithdrawFrom', { Sender: null })
-export const BalanceWithdrawArg = bcs.lazy(() =>
-  bcs.struct('BalanceWithdrawArg', {
+export const FundsWithdrawalArg = bcs.lazy(() =>
+  bcs.struct('FundsWithdrawalArg', {
     reservation: Reservation,
-    type_param: WithdrawTypeParam,
+    type_arg: WithdrawalTypeArg,
     withdraw_from: WithdrawFrom,
   }),
 )
-export const ObjectID = AccountAddress
-export const ObjectDigest = Digest
-export const ObjectArg = bcs.enum('ObjectArg', {
-  ImmOrOwnedObject: bcs.tuple([ObjectID, SequenceNumber, ObjectDigest]),
-  SharedObject: bcs.struct('ObjectArg', {
-    id: ObjectID,
-    initial_shared_version: SequenceNumber,
-    mutable: bcs.bool(),
+export const CallArg = bcs.lazy(() =>
+  bcs.enum('CallArg', {
+    Pure: bcs.vector(bcs.u8()),
+    Object: ObjectArg,
+    FundsWithdrawal: FundsWithdrawalArg,
   }),
-  Receiving: bcs.tuple([ObjectID, SequenceNumber, ObjectDigest]),
-})
-export const CallArg = bcs.enum('CallArg', {
-  Pure: bcs.vector(bcs.u8()),
-  Object: ObjectArg,
-  BalanceWithdraw: BalanceWithdrawArg,
-})
+)
 export const CheckpointDigest = Digest
 export const ChainIdentifier = CheckpointDigest
 export const ProtocolVersion = bcs.u64()
@@ -159,11 +162,13 @@ export const ChangeEpoch = bcs.struct('ChangeEpoch', {
     ]),
   ),
 })
+export const CheckpointArtifactsDigest = Digest
 export const ECMHLiveObjectSetDigest = bcs.struct('ECMHLiveObjectSetDigest', {
   digest: Digest,
 })
 export const CheckpointCommitment = bcs.enum('CheckpointCommitment', {
   ECMHLiveObjectSetDigest,
+  CheckpointArtifactsDigest,
 })
 export const TransactionDigest = Digest
 export const TransactionEffectsDigest = Digest
@@ -240,6 +245,8 @@ export const MoveObjectType_ = bcs.enum('MoveObjectType_', {
   GasCoin: null,
   StakedSui: null,
   Coin: TypeTag,
+  SuiBalanceAccumulatorField: null,
+  BalanceAccumulatorField: TypeTag,
 })
 export const MoveObjectType = MoveObjectType_
 export const MoveObject = bcs.struct('MoveObject', {
@@ -328,6 +335,7 @@ export const EndOfEpochTransactionKind = bcs.enum('EndOfEpochTransactionKind', {
   BridgeCommitteeInit: SequenceNumber,
   StoreExecutionTimeObservations: StoredExecutionTimeObservations,
   AccumulatorRootCreate: null,
+  CoinRegistryCreate: null,
 })
 export const RandomnessRound = bcs.u64()
 export const RandomnessStateUpdate = bcs.struct('RandomnessStateUpdate', {
@@ -464,6 +472,10 @@ export const CommandArgumentError = bcs.enum('CommandArgumentError', {
   InvalidArgumentArity: null,
   InvalidTransferObject: null,
   InvalidMakeMoveVecNonObjectArgument: null,
+  ArgumentWithoutValue: null,
+  CannotMoveBorrowedValue: null,
+  CannotWriteToExtendedReference: null,
+  InvalidReferenceArgument: null,
 })
 export const TypeArgumentError = bcs.enum('TypeArgumentError', {
   TypeNotFound: null,
@@ -627,7 +639,7 @@ export const EffectsObjectChange = bcs.struct('EffectsObjectChange', {
   output_state: ObjectOut,
   id_operation: IDOperation,
 })
-export const UnchangedSharedKind = bcs.enum('UnchangedSharedKind', {
+export const UnchangedConsensusKind = bcs.enum('UnchangedConsensusKind', {
   ReadOnlyRoot: bcs.tuple([SequenceNumber, ObjectDigest]),
   MutateConsensusStreamEnded: SequenceNumber,
   ReadConsensusStreamEnded: SequenceNumber,
@@ -645,8 +657,8 @@ export const TransactionEffectsV2 = bcs.struct('TransactionEffectsV2', {
   dependencies: bcs.vector(TransactionDigest),
   lamport_version: SequenceNumber,
   changed_objects: bcs.vector(bcs.tuple([ObjectID, EffectsObjectChange])),
-  unchanged_shared_objects: bcs.vector(
-    bcs.tuple([ObjectID, UnchangedSharedKind]),
+  unchanged_consensus_objects: bcs.vector(
+    bcs.tuple([ObjectID, UnchangedConsensusKind]),
   ),
   aux_data_digest: bcs.option(EffectsAuxDataDigest),
 })
