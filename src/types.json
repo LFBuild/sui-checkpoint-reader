@@ -977,6 +977,9 @@
       },
       "9": {
         "CoinRegistryCreate": "UNIT"
+      },
+      "10": {
+        "DisplayRegistryCreate": "UNIT"
       }
     }
   },
@@ -1300,6 +1303,17 @@
       },
       "40": {
         "InsufficientBalanceForWithdraw": "UNIT"
+      },
+      "41": {
+        "NonExclusiveWriteInputObjectModified": {
+          "STRUCT": [
+            {
+              "id": {
+                "TYPENAME": "ObjectID"
+              }
+            }
+          ]
+        }
       }
     }
   },
@@ -1793,7 +1807,9 @@
               }
             },
             {
-              "mutable": "BOOL"
+              "mutability": {
+                "TYPENAME": "SharedObjectMutability"
+              }
             }
           ]
         }
@@ -2177,6 +2193,19 @@
   },
   "SequenceNumber": {
     "NEWTYPESTRUCT": "U64"
+  },
+  "SharedObjectMutability": {
+    "ENUM": {
+      "0": {
+        "Immutable": "UNIT"
+      },
+      "1": {
+        "Mutable": "UNIT"
+      },
+      "2": {
+        "NonExclusiveWrite": "UNIT"
+      }
+    }
   },
   "StoredExecutionTimeObservations": {
     "ENUM": {
@@ -2640,6 +2669,40 @@
         "Epoch": {
           "NEWTYPE": "U64"
         }
+      },
+      "2": {
+        "ValidDuring": {
+          "STRUCT": [
+            {
+              "min_epoch": {
+                "OPTION": "U64"
+              }
+            },
+            {
+              "max_epoch": {
+                "OPTION": "U64"
+              }
+            },
+            {
+              "min_timestamp_seconds": {
+                "OPTION": "U64"
+              }
+            },
+            {
+              "max_timestamp_seconds": {
+                "OPTION": "U64"
+              }
+            },
+            {
+              "chain": {
+                "TYPENAME": "ChainIdentifier"
+              }
+            },
+            {
+              "nonce": "U32"
+            }
+          ]
+        }
       }
     }
   },
@@ -2929,6 +2992,9 @@
     "ENUM": {
       "0": {
         "Sender": "UNIT"
+      },
+      "1": {
+        "Sponsor": "UNIT"
       }
     }
   },

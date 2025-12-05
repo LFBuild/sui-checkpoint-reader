@@ -2,7 +2,7 @@ import { writeFile } from 'fs/promises'
 
 import { parse } from 'yaml'
 
-const VERSION = 'testnet-v1.53.1'
+const VERSION = 'testnet-v1.61.2'
 const YAML_URL =
   'https://raw.githubusercontent.com/MystenLabs/sui/{version}/crates/sui-core/tests/staged/sui.yaml'
 
