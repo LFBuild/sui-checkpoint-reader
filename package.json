@@ -35,7 +35,7 @@
   "dependencies": {
     "@logtail/pino": "^0.5.2",
     "@mongodb-js/zstd": "^1.2.2",
-    "@mysten/bcs": "^1.7.0",
+    "@mysten/bcs": "^1.6.0",
     "chokidar": "^4.0.3",
     "classic-level": "^1.4.1",
     "pino": "^9.6.0",
