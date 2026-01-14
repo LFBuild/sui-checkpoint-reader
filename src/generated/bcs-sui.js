@@ -41,7 +41,7 @@ export const Digest = bcs.vector(bcs.u8())
 export const AccumulatorValue = bcs.enum('AccumulatorValue', {
   Integer: bcs.u64(),
   IntegerTuple: bcs.tuple([bcs.u64(), bcs.u64()]),
-  EventDigest: bcs.tuple([bcs.u64(), Digest]),
+  EventDigest: bcs.vector(bcs.tuple([bcs.u64(), Digest])),
 })
 export const AccumulatorWriteV1 = bcs.struct('AccumulatorWriteV1', {
   address: AccumulatorAddress,
@@ -89,12 +89,17 @@ export const AuthorityQuorumSignInfo = bcs.struct('AuthorityQuorumSignInfo', {
 })
 export const ObjectID = AccountAddress
 export const ObjectDigest = Digest
+export const SharedObjectMutability = bcs.enum('SharedObjectMutability', {
+  Immutable: null,
+  Mutable: null,
+  NonExclusiveWrite: null,
+})
 export const ObjectArg = bcs.enum('ObjectArg', {
   ImmOrOwnedObject: bcs.tuple([ObjectID, SequenceNumber, ObjectDigest]),
   SharedObject: bcs.struct('ObjectArg', {
     id: ObjectID,
     initial_shared_version: SequenceNumber,
-    mutable: bcs.bool(),
+    mutability: SharedObjectMutability,
   }),
   Receiving: bcs.tuple([ObjectID, SequenceNumber, ObjectDigest]),
 })
@@ -128,7 +133,10 @@ export const TypeInput = bcs.lazy(() =>
 export const WithdrawalTypeArg = bcs.lazy(() =>
   bcs.enum('WithdrawalTypeArg', { Balance: TypeInput }),
 )
-export const WithdrawFrom = bcs.enum('WithdrawFrom', { Sender: null })
+export const WithdrawFrom = bcs.enum('WithdrawFrom', {
+  Sender: null,
+  Sponsor: null,
+})
 export const FundsWithdrawalArg = bcs.lazy(() =>
   bcs.struct('FundsWithdrawalArg', {
     reservation: Reservation,
@@ -181,8 +189,21 @@ export const CheckpointContentsV1 = bcs.struct('CheckpointContentsV1', {
   transactions: bcs.vector(ExecutionDigests),
   user_signatures: bcs.vector(bcs.vector(GenericSignature)),
 })
+export const CheckpointTransactionContents = bcs.struct(
+  'CheckpointTransactionContents',
+  {
+    digest: ExecutionDigests,
+    user_signatures: bcs.vector(
+      bcs.tuple([GenericSignature, bcs.option(SequenceNumber)]),
+    ),
+  },
+)
+export const CheckpointContentsV2 = bcs.struct('CheckpointContentsV2', {
+  transactions: bcs.vector(CheckpointTransactionContents),
+})
 export const CheckpointContents = bcs.enum('CheckpointContents', {
   V1: CheckpointContentsV1,
+  V2: CheckpointContentsV2,
 })
 export const CheckpointContentsDigest = Digest
 export const GasCostSummary = bcs.struct('GasCostSummary', {
@@ -247,6 +268,9 @@ export const MoveObjectType_ = bcs.enum('MoveObjectType_', {
   Coin: TypeTag,
   SuiBalanceAccumulatorField: null,
   BalanceAccumulatorField: TypeTag,
+  BalanceAccumulatorOwnerField: null,
+  SuiBalanceAccumulatorMetadataField: null,
+  BalanceAccumulatorMetadataField: TypeTag,
 })
 export const MoveObjectType = MoveObjectType_
 export const MoveObject = bcs.struct('MoveObject', {
@@ -325,6 +349,10 @@ export const StoredExecutionTimeObservations = bcs.enum(
     ),
   },
 )
+export const WriteAccumulatorStorageCost = bcs.struct(
+  'WriteAccumulatorStorageCost',
+  { storage_cost: bcs.u64() },
+)
 export const EndOfEpochTransactionKind = bcs.enum('EndOfEpochTransactionKind', {
   ChangeEpoch,
   AuthenticatorStateCreate: null,
@@ -336,6 +364,9 @@ export const EndOfEpochTransactionKind = bcs.enum('EndOfEpochTransactionKind', {
   StoreExecutionTimeObservations: StoredExecutionTimeObservations,
   AccumulatorRootCreate: null,
   CoinRegistryCreate: null,
+  DisplayRegistryCreate: null,
+  AddressAliasStateCreate: null,
+  WriteAccumulatorStorageCost,
 })
 export const RandomnessRound = bcs.u64()
 export const RandomnessStateUpdate = bcs.struct('RandomnessStateUpdate', {
@@ -420,6 +451,14 @@ export const GasData = bcs.struct('GasData', {
 export const TransactionExpiration = bcs.enum('TransactionExpiration', {
   None: null,
   Epoch: bcs.u64(),
+  ValidDuring: bcs.struct('TransactionExpiration', {
+    min_epoch: bcs.option(bcs.u64()),
+    max_epoch: bcs.option(bcs.u64()),
+    min_timestamp: bcs.option(bcs.u64()),
+    max_timestamp: bcs.option(bcs.u64()),
+    chain: ChainIdentifier,
+    nonce: bcs.u32(),
+  }),
 })
 export const TransactionDataV1 = bcs.struct('TransactionDataV1', {
   kind: TransactionKind,
@@ -579,7 +618,10 @@ export const ExecutionFailureStatus = bcs.enum('ExecutionFailureStatus', {
     max_scaled_size: bcs.u64(),
   }),
   InvalidLinkage: null,
-  InsufficientBalanceForWithdraw: null,
+  InsufficientFundsForWithdraw: null,
+  NonExclusiveWriteInputObjectModified: bcs.struct('ExecutionFailureStatus', {
+    id: ObjectID,
+  }),
 })
 export const ExecutionStatus = bcs.enum('ExecutionStatus', {
   Success: null,

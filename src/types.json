@@ -45,12 +45,16 @@
       },
       "2": {
         "EventDigest": {
-          "TUPLE": [
-            "U64",
-            {
-              "TYPENAME": "Digest"
+          "NEWTYPE": {
+            "SEQ": {
+              "TUPLE": [
+                "U64",
+                {
+                  "TYPENAME": "Digest"
+                }
+              ]
             }
-          ]
+          }
         }
       }
     }
@@ -282,6 +286,13 @@
             "TYPENAME": "CheckpointContentsV1"
           }
         }
+      },
+      "1": {
+        "V2": {
+          "NEWTYPE": {
+            "TYPENAME": "CheckpointContentsV2"
+          }
+        }
       }
     }
   },
@@ -305,6 +316,17 @@
             "SEQ": {
               "TYPENAME": "GenericSignature"
             }
+          }
+        }
+      }
+    ]
+  },
+  "CheckpointContentsV2": {
+    "STRUCT": [
+      {
+        "transactions": {
+          "SEQ": {
+            "TYPENAME": "CheckpointTransactionContents"
           }
         }
       }
@@ -418,6 +440,31 @@
         "output_objects": {
           "SEQ": {
             "TYPENAME": "Object"
+          }
+        }
+      }
+    ]
+  },
+  "CheckpointTransactionContents": {
+    "STRUCT": [
+      {
+        "digest": {
+          "TYPENAME": "ExecutionDigests"
+        }
+      },
+      {
+        "user_signatures": {
+          "SEQ": {
+            "TUPLE": [
+              {
+                "TYPENAME": "GenericSignature"
+              },
+              {
+                "OPTION": {
+                  "TYPENAME": "SequenceNumber"
+                }
+              }
+            ]
           }
         }
       }
@@ -977,6 +1024,19 @@
       },
       "9": {
         "CoinRegistryCreate": "UNIT"
+      },
+      "10": {
+        "DisplayRegistryCreate": "UNIT"
+      },
+      "11": {
+        "AddressAliasStateCreate": "UNIT"
+      },
+      "12": {
+        "WriteAccumulatorStorageCost": {
+          "NEWTYPE": {
+            "TYPENAME": "WriteAccumulatorStorageCost"
+          }
+        }
       }
     }
   },
@@ -1299,7 +1359,18 @@
         "InvalidLinkage": "UNIT"
       },
       "40": {
-        "InsufficientBalanceForWithdraw": "UNIT"
+        "InsufficientFundsForWithdraw": "UNIT"
+      },
+      "41": {
+        "NonExclusiveWriteInputObjectModified": {
+          "STRUCT": [
+            {
+              "id": {
+                "TYPENAME": "ObjectID"
+              }
+            }
+          ]
+        }
       }
     }
   },
@@ -1656,6 +1727,19 @@
             "TYPENAME": "TypeTag"
           }
         }
+      },
+      "6": {
+        "BalanceAccumulatorOwnerField": "UNIT"
+      },
+      "7": {
+        "SuiBalanceAccumulatorMetadataField": "UNIT"
+      },
+      "8": {
+        "BalanceAccumulatorMetadataField": {
+          "NEWTYPE": {
+            "TYPENAME": "TypeTag"
+          }
+        }
       }
     }
   },
@@ -1793,7 +1877,9 @@
               }
             },
             {
-              "mutable": "BOOL"
+              "mutability": {
+                "TYPENAME": "SharedObjectMutability"
+              }
             }
           ]
         }
@@ -2177,6 +2263,19 @@
   },
   "SequenceNumber": {
     "NEWTYPESTRUCT": "U64"
+  },
+  "SharedObjectMutability": {
+    "ENUM": {
+      "0": {
+        "Immutable": "UNIT"
+      },
+      "1": {
+        "Mutable": "UNIT"
+      },
+      "2": {
+        "NonExclusiveWrite": "UNIT"
+      }
+    }
   },
   "StoredExecutionTimeObservations": {
     "ENUM": {
@@ -2640,6 +2739,40 @@
         "Epoch": {
           "NEWTYPE": "U64"
         }
+      },
+      "2": {
+        "ValidDuring": {
+          "STRUCT": [
+            {
+              "min_epoch": {
+                "OPTION": "U64"
+              }
+            },
+            {
+              "max_epoch": {
+                "OPTION": "U64"
+              }
+            },
+            {
+              "min_timestamp": {
+                "OPTION": "U64"
+              }
+            },
+            {
+              "max_timestamp": {
+                "OPTION": "U64"
+              }
+            },
+            {
+              "chain": {
+                "TYPENAME": "ChainIdentifier"
+              }
+            },
+            {
+              "nonce": "U32"
+            }
+          ]
+        }
       }
     }
   },
@@ -2929,6 +3062,9 @@
     "ENUM": {
       "0": {
         "Sender": "UNIT"
+      },
+      "1": {
+        "Sponsor": "UNIT"
       }
     }
   },
@@ -2942,6 +3078,13 @@
         }
       }
     }
+  },
+  "WriteAccumulatorStorageCost": {
+    "STRUCT": [
+      {
+        "storage_cost": "U64"
+      }
+    ]
   },
   "ZkLoginAuthenticatorAsBytes": {
     "NEWTYPESTRUCT": {
