@@ -132,10 +132,10 @@ function generate_bcs_types(parsed_yaml) {
   bcs.struct(type_name, {
     ${
       params === 'data'
-        ? 'data: data'
+        ? 'data'
         : content.STRUCT.map(obj => {
             const [[field_name]] = Object.entries(obj)
-            return `${field_name}: ${field_name}`
+            return field_name
           }).join(', ')
     }
   })`
@@ -268,12 +268,17 @@ function parse_type(
   return primitive
 }
 
+function format_field(name, value) {
+  return value === name ? name : `${name}: ${value}`
+}
+
 function parse_enum(type, name, deferred = false, circular_types = new Set()) {
   const result = Array.from({ ...type, length: Object.keys(type).length }).map(
     object => {
       const [[inner_name, value]] = Object.entries(object)
+      const parsed = parse_type(value, name, deferred, circular_types)
 
-      return `${inner_name}: ${parse_type(value, name, deferred, circular_types)}`
+      return format_field(inner_name, parsed)
     },
   )
   return `bcs.enum("${name}", {${result.join(', ')}})`
