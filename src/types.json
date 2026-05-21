@@ -1093,7 +1093,7 @@
       }
     ]
   },
-  "ExecutionFailureStatus": {
+  "ExecutionErrorKind": {
     "ENUM": {
       "0": {
         "InsufficientGas": "UNIT"
@@ -1374,6 +1374,20 @@
       }
     }
   },
+  "ExecutionFailure": {
+    "STRUCT": [
+      {
+        "error": {
+          "TYPENAME": "ExecutionErrorKind"
+        }
+      },
+      {
+        "command": {
+          "OPTION": "U64"
+        }
+      }
+    ]
+  },
   "ExecutionStatus": {
     "ENUM": {
       "0": {
@@ -1381,18 +1395,9 @@
       },
       "1": {
         "Failure": {
-          "STRUCT": [
-            {
-              "error": {
-                "TYPENAME": "ExecutionFailureStatus"
-              }
-            },
-            {
-              "command": {
-                "OPTION": "U64"
-              }
-            }
-          ]
+          "NEWTYPE": {
+            "TYPENAME": "ExecutionFailure"
+          }
         }
       }
     }
@@ -1723,19 +1728,6 @@
       },
       "5": {
         "BalanceAccumulatorField": {
-          "NEWTYPE": {
-            "TYPENAME": "TypeTag"
-          }
-        }
-      },
-      "6": {
-        "BalanceAccumulatorOwnerField": "UNIT"
-      },
-      "7": {
-        "SuiBalanceAccumulatorMetadataField": "UNIT"
-      },
-      "8": {
-        "BalanceAccumulatorMetadataField": {
           "NEWTYPE": {
             "TYPENAME": "TypeTag"
           }
@@ -2229,9 +2221,6 @@
   "Reservation": {
     "ENUM": {
       "0": {
-        "EntireBalance": "UNIT"
-      },
-      "1": {
         "MaxAmountU64": {
           "NEWTYPE": "U64"
         }
@@ -2974,34 +2963,6 @@
       }
     }
   },
-  "TypedStoreError": {
-    "ENUM": {
-      "0": {
-        "RocksDBError": {
-          "NEWTYPE": "STR"
-        }
-      },
-      "1": {
-        "SerializationError": {
-          "NEWTYPE": "STR"
-        }
-      },
-      "2": {
-        "UnregisteredColumn": {
-          "NEWTYPE": "STR"
-        }
-      },
-      "3": {
-        "CrossDBBatch": "UNIT"
-      },
-      "4": {
-        "MetricsReporting": "UNIT"
-      },
-      "5": {
-        "RetryableTransactionError": "UNIT"
-      }
-    }
-  },
   "UnchangedConsensusKind": {
     "ENUM": {
       "0": {
@@ -3073,7 +3034,7 @@
       "0": {
         "Balance": {
           "NEWTYPE": {
-            "TYPENAME": "TypeInput"
+            "TYPENAME": "TypeTag"
           }
         }
       }

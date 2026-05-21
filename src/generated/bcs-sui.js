@@ -103,54 +103,24 @@ export const ObjectArg = bcs.enum('ObjectArg', {
   }),
   Receiving: bcs.tuple([ObjectID, SequenceNumber, ObjectDigest]),
 })
-export const Reservation = bcs.enum('Reservation', {
-  EntireBalance: null,
-  MaxAmountU64: bcs.u64(),
+export const Reservation = bcs.enum('Reservation', { MaxAmountU64: bcs.u64() })
+export const WithdrawalTypeArg = bcs.enum('WithdrawalTypeArg', {
+  Balance: TypeTag,
 })
-export const StructInput = bcs.lazy(() =>
-  bcs.struct('StructInput', {
-    address: AccountAddress,
-    module: bcs.string(),
-    name: bcs.string(),
-    type_args: bcs.vector(TypeInput),
-  }),
-)
-export const TypeInput = bcs.lazy(() =>
-  bcs.enum('TypeInput', {
-    bool: null,
-    U8: null,
-    U64: null,
-    U128: null,
-    Address: null,
-    Signer: null,
-    Vector: bcs.lazy(() => TypeInput),
-    Struct: StructInput,
-    U16: null,
-    U32: null,
-    U256: null,
-  }),
-)
-export const WithdrawalTypeArg = bcs.lazy(() =>
-  bcs.enum('WithdrawalTypeArg', { Balance: TypeInput }),
-)
 export const WithdrawFrom = bcs.enum('WithdrawFrom', {
   Sender: null,
   Sponsor: null,
 })
-export const FundsWithdrawalArg = bcs.lazy(() =>
-  bcs.struct('FundsWithdrawalArg', {
-    reservation: Reservation,
-    type_arg: WithdrawalTypeArg,
-    withdraw_from: WithdrawFrom,
-  }),
-)
-export const CallArg = bcs.lazy(() =>
-  bcs.enum('CallArg', {
-    Pure: bcs.vector(bcs.u8()),
-    Object: ObjectArg,
-    FundsWithdrawal: FundsWithdrawalArg,
-  }),
-)
+export const FundsWithdrawalArg = bcs.struct('FundsWithdrawalArg', {
+  reservation: Reservation,
+  type_arg: WithdrawalTypeArg,
+  withdraw_from: WithdrawFrom,
+})
+export const CallArg = bcs.enum('CallArg', {
+  Pure: bcs.vector(bcs.u8()),
+  Object: ObjectArg,
+  FundsWithdrawal: FundsWithdrawalArg,
+})
 export const CheckpointDigest = Digest
 export const ChainIdentifier = CheckpointDigest
 export const ProtocolVersion = bcs.u64()
@@ -236,31 +206,63 @@ export const Intent = bcs.struct('Intent', {
   version: bcs.u8(),
   app_id: bcs.u8(),
 })
-export const ProgrammableMoveCall = bcs.struct('ProgrammableMoveCall', {
-  package: ObjectID,
-  module: bcs.string(),
-  function: bcs.string(),
-  type_arguments: bcs.vector(TypeInput),
-  arguments: bcs.vector(Argument),
-})
-export const Command = bcs.enum('Command', {
-  MoveCall: ProgrammableMoveCall,
-  TransferObjects: bcs.tuple([bcs.vector(Argument), Argument]),
-  SplitCoins: bcs.tuple([Argument, bcs.vector(Argument)]),
-  MergeCoins: bcs.tuple([Argument, bcs.vector(Argument)]),
-  Publish: bcs.tuple([bcs.vector(bcs.vector(bcs.u8())), bcs.vector(ObjectID)]),
-  MakeMoveVec: bcs.tuple([bcs.option(TypeInput), bcs.vector(Argument)]),
-  Upgrade: bcs.tuple([
-    bcs.vector(bcs.vector(bcs.u8())),
-    bcs.vector(ObjectID),
-    ObjectID,
-    Argument,
-  ]),
-})
-export const ProgrammableTransaction = bcs.struct('ProgrammableTransaction', {
-  inputs: bcs.vector(CallArg),
-  commands: bcs.vector(Command),
-})
+export const StructInput = bcs.lazy(() =>
+  bcs.struct('StructInput', {
+    address: AccountAddress,
+    module: bcs.string(),
+    name: bcs.string(),
+    type_args: bcs.vector(TypeInput),
+  }),
+)
+export const TypeInput = bcs.lazy(() =>
+  bcs.enum('TypeInput', {
+    bool: null,
+    U8: null,
+    U64: null,
+    U128: null,
+    Address: null,
+    Signer: null,
+    Vector: bcs.lazy(() => TypeInput),
+    Struct: StructInput,
+    U16: null,
+    U32: null,
+    U256: null,
+  }),
+)
+export const ProgrammableMoveCall = bcs.lazy(() =>
+  bcs.struct('ProgrammableMoveCall', {
+    package: ObjectID,
+    module: bcs.string(),
+    function: bcs.string(),
+    type_arguments: bcs.vector(TypeInput),
+    arguments: bcs.vector(Argument),
+  }),
+)
+export const Command = bcs.lazy(() =>
+  bcs.enum('Command', {
+    MoveCall: ProgrammableMoveCall,
+    TransferObjects: bcs.tuple([bcs.vector(Argument), Argument]),
+    SplitCoins: bcs.tuple([Argument, bcs.vector(Argument)]),
+    MergeCoins: bcs.tuple([Argument, bcs.vector(Argument)]),
+    Publish: bcs.tuple([
+      bcs.vector(bcs.vector(bcs.u8())),
+      bcs.vector(ObjectID),
+    ]),
+    MakeMoveVec: bcs.tuple([bcs.option(TypeInput), bcs.vector(Argument)]),
+    Upgrade: bcs.tuple([
+      bcs.vector(bcs.vector(bcs.u8())),
+      bcs.vector(ObjectID),
+      ObjectID,
+      Argument,
+    ]),
+  }),
+)
+export const ProgrammableTransaction = bcs.lazy(() =>
+  bcs.struct('ProgrammableTransaction', {
+    inputs: bcs.vector(CallArg),
+    commands: bcs.vector(Command),
+  }),
+)
 export const MoveObjectType_ = bcs.enum('MoveObjectType_', {
   Other: StructTag,
   GasCoin: null,
@@ -268,9 +270,6 @@ export const MoveObjectType_ = bcs.enum('MoveObjectType_', {
   Coin: TypeTag,
   SuiBalanceAccumulatorField: null,
   BalanceAccumulatorField: TypeTag,
-  BalanceAccumulatorOwnerField: null,
-  SuiBalanceAccumulatorMetadataField: null,
-  BalanceAccumulatorMetadataField: TypeTag,
 })
 export const MoveObjectType = MoveObjectType_
 export const MoveObject = bcs.struct('MoveObject', {
@@ -429,19 +428,21 @@ export const ConsensusCommitPrologueV4 = bcs.struct(
     additional_state_digest: AdditionalConsensusStateDigest,
   },
 )
-export const TransactionKind = bcs.enum('TransactionKind', {
-  ProgrammableTransaction,
-  ChangeEpoch,
-  Genesis: GenesisTransaction,
-  ConsensusCommitPrologue,
-  AuthenticatorStateUpdate,
-  EndOfEpochTransaction: bcs.vector(EndOfEpochTransactionKind),
-  RandomnessStateUpdate,
-  ConsensusCommitPrologueV2,
-  ConsensusCommitPrologueV3,
-  ConsensusCommitPrologueV4,
-  ProgrammableSystemTransaction: ProgrammableTransaction,
-})
+export const TransactionKind = bcs.lazy(() =>
+  bcs.enum('TransactionKind', {
+    ProgrammableTransaction,
+    ChangeEpoch,
+    Genesis: GenesisTransaction,
+    ConsensusCommitPrologue,
+    AuthenticatorStateUpdate,
+    EndOfEpochTransaction: bcs.vector(EndOfEpochTransactionKind),
+    RandomnessStateUpdate,
+    ConsensusCommitPrologueV2,
+    ConsensusCommitPrologueV3,
+    ConsensusCommitPrologueV4,
+    ProgrammableSystemTransaction: ProgrammableTransaction,
+  }),
+)
 export const GasData = bcs.struct('GasData', {
   payment: bcs.vector(bcs.tuple([ObjectID, SequenceNumber, ObjectDigest])),
   owner: SuiAddress,
@@ -460,24 +461,29 @@ export const TransactionExpiration = bcs.enum('TransactionExpiration', {
     nonce: bcs.u32(),
   }),
 })
-export const TransactionDataV1 = bcs.struct('TransactionDataV1', {
-  kind: TransactionKind,
-  sender: SuiAddress,
-  gas_data: GasData,
-  expiration: TransactionExpiration,
-})
-export const TransactionData = bcs.enum('TransactionData', {
-  V1: TransactionDataV1,
-})
-export const IntentMessage = bcs.struct('IntentMessage', {
-  intent: Intent,
-  value: TransactionData,
-})
-export const SenderSignedTransaction = bcs.struct('SenderSignedTransaction', {
-  intent_message: IntentMessage,
-  tx_signatures: bcs.vector(GenericSignature),
-})
-export const SenderSignedData = bcs.vector(SenderSignedTransaction)
+export const TransactionDataV1 = bcs.lazy(() =>
+  bcs.struct('TransactionDataV1', {
+    kind: TransactionKind,
+    sender: SuiAddress,
+    gas_data: GasData,
+    expiration: TransactionExpiration,
+  }),
+)
+export const TransactionData = bcs.lazy(() =>
+  bcs.enum('TransactionData', { V1: TransactionDataV1 }),
+)
+export const IntentMessage = bcs.lazy(() =>
+  bcs.struct('IntentMessage', { intent: Intent, value: TransactionData }),
+)
+export const SenderSignedTransaction = bcs.lazy(() =>
+  bcs.struct('SenderSignedTransaction', {
+    intent_message: IntentMessage,
+    tx_signatures: bcs.vector(GenericSignature),
+  }),
+)
+export const SenderSignedData = bcs.lazy(() =>
+  bcs.vector(SenderSignedTransaction),
+)
 export const EmptySignInfo = bcs.struct('EmptySignInfo', {})
 export const ModuleId = bcs.struct('ModuleId', {
   address: AccountAddress,
@@ -536,20 +542,20 @@ export const PackageUpgradeError = bcs.enum('PackageUpgradeError', {
   }),
 })
 export const CongestedObjects = bcs.vector(ObjectID)
-export const ExecutionFailureStatus = bcs.enum('ExecutionFailureStatus', {
+export const ExecutionErrorKind = bcs.enum('ExecutionErrorKind', {
   InsufficientGas: null,
   InvalidGasObject: null,
   InvariantViolation: null,
   FeatureNotYetSupported: null,
-  MoveObjectTooBig: bcs.struct('ExecutionFailureStatus', {
+  MoveObjectTooBig: bcs.struct('ExecutionErrorKind', {
     object_size: bcs.u64(),
     max_object_size: bcs.u64(),
   }),
-  MovePackageTooBig: bcs.struct('ExecutionFailureStatus', {
+  MovePackageTooBig: bcs.struct('ExecutionErrorKind', {
     object_size: bcs.u64(),
     max_object_size: bcs.u64(),
   }),
-  CircularObjectOwnership: bcs.struct('ExecutionFailureStatus', {
+  CircularObjectOwnership: bcs.struct('ExecutionErrorKind', {
     object: ObjectID,
   }),
   InsufficientCoinBalance: null,
@@ -564,32 +570,32 @@ export const ExecutionFailureStatus = bcs.enum('ExecutionFailureStatus', {
   ArityMismatch: null,
   TypeArityMismatch: null,
   NonEntryFunctionInvoked: null,
-  CommandArgumentError: bcs.struct('ExecutionFailureStatus', {
+  CommandArgumentError: bcs.struct('ExecutionErrorKind', {
     arg_idx: bcs.u16(),
     kind: CommandArgumentError,
   }),
-  TypeArgumentError: bcs.struct('ExecutionFailureStatus', {
+  TypeArgumentError: bcs.struct('ExecutionErrorKind', {
     argument_idx: bcs.u16(),
     kind: TypeArgumentError,
   }),
-  UnusedValueWithoutDrop: bcs.struct('ExecutionFailureStatus', {
+  UnusedValueWithoutDrop: bcs.struct('ExecutionErrorKind', {
     result_idx: bcs.u16(),
     secondary_idx: bcs.u16(),
   }),
-  InvalidPublicFunctionReturnType: bcs.struct('ExecutionFailureStatus', {
+  InvalidPublicFunctionReturnType: bcs.struct('ExecutionErrorKind', {
     idx: bcs.u16(),
   }),
   InvalidTransferObject: null,
-  EffectsTooLarge: bcs.struct('ExecutionFailureStatus', {
+  EffectsTooLarge: bcs.struct('ExecutionErrorKind', {
     current_size: bcs.u64(),
     max_size: bcs.u64(),
   }),
   PublishUpgradeMissingDependency: null,
   PublishUpgradeDependencyDowngrade: null,
-  PackageUpgradeError: bcs.struct('ExecutionFailureStatus', {
+  PackageUpgradeError: bcs.struct('ExecutionErrorKind', {
     upgrade_error: PackageUpgradeError,
   }),
-  WrittenObjectsTooLarge: bcs.struct('ExecutionFailureStatus', {
+  WrittenObjectsTooLarge: bcs.struct('ExecutionErrorKind', {
     current_size: bcs.u64(),
     max_size: bcs.u64(),
   }),
@@ -598,37 +604,38 @@ export const ExecutionFailureStatus = bcs.enum('ExecutionFailureStatus', {
   SharedObjectOperationNotAllowed: null,
   InputObjectDeleted: null,
   ExecutionCancelledDueToSharedObjectCongestion: bcs.struct(
-    'ExecutionFailureStatus',
+    'ExecutionErrorKind',
     { congested_objects: CongestedObjects },
   ),
-  AddressDeniedForCoin: bcs.struct('ExecutionFailureStatus', {
+  AddressDeniedForCoin: bcs.struct('ExecutionErrorKind', {
     address: SuiAddress,
     coin_type: bcs.string(),
   }),
-  CoinTypeGlobalPause: bcs.struct('ExecutionFailureStatus', {
+  CoinTypeGlobalPause: bcs.struct('ExecutionErrorKind', {
     coin_type: bcs.string(),
   }),
   ExecutionCancelledDueToRandomnessUnavailable: null,
-  MoveVectorElemTooBig: bcs.struct('ExecutionFailureStatus', {
+  MoveVectorElemTooBig: bcs.struct('ExecutionErrorKind', {
     value_size: bcs.u64(),
     max_scaled_size: bcs.u64(),
   }),
-  MoveRawValueTooBig: bcs.struct('ExecutionFailureStatus', {
+  MoveRawValueTooBig: bcs.struct('ExecutionErrorKind', {
     value_size: bcs.u64(),
     max_scaled_size: bcs.u64(),
   }),
   InvalidLinkage: null,
   InsufficientFundsForWithdraw: null,
-  NonExclusiveWriteInputObjectModified: bcs.struct('ExecutionFailureStatus', {
+  NonExclusiveWriteInputObjectModified: bcs.struct('ExecutionErrorKind', {
     id: ObjectID,
   }),
 })
+export const ExecutionFailure = bcs.struct('ExecutionFailure', {
+  error: ExecutionErrorKind,
+  command: bcs.option(bcs.u64()),
+})
 export const ExecutionStatus = bcs.enum('ExecutionStatus', {
   Success: null,
-  Failure: bcs.struct('ExecutionStatus', {
-    error: ExecutionFailureStatus,
-    command: bcs.option(bcs.u64()),
-  }),
+  Failure: ExecutionFailure,
 })
 export const TransactionEventsDigest = Digest
 export const TransactionEffectsV1 = bcs.struct('TransactionEffectsV1', {
@@ -724,26 +731,30 @@ export const Object = bcs.struct('Object', {
   previous_transaction: TransactionDigest,
   storage_rebate: bcs.u64(),
 })
-export const CheckpointTransaction = bcs.struct('CheckpointTransaction', {
-  transaction: Envelope(
-    'CheckpointTransaction',
-    SenderSignedData,
-    EmptySignInfo,
-  ),
-  effects: TransactionEffects,
-  events: bcs.option(TransactionEvents),
-  input_objects: bcs.vector(Object),
-  output_objects: bcs.vector(Object),
-})
-export const CheckpointData = bcs.struct('CheckpointData', {
-  checkpoint_summary: Envelope(
-    'CheckpointData',
-    CheckpointSummary,
-    AuthorityQuorumSignInfo,
-  ),
-  checkpoint_contents: CheckpointContents,
-  transactions: bcs.vector(CheckpointTransaction),
-})
+export const CheckpointTransaction = bcs.lazy(() =>
+  bcs.struct('CheckpointTransaction', {
+    transaction: Envelope(
+      'CheckpointTransaction',
+      SenderSignedData,
+      EmptySignInfo,
+    ),
+    effects: TransactionEffects,
+    events: bcs.option(TransactionEvents),
+    input_objects: bcs.vector(Object),
+    output_objects: bcs.vector(Object),
+  }),
+)
+export const CheckpointData = bcs.lazy(() =>
+  bcs.struct('CheckpointData', {
+    checkpoint_summary: Envelope(
+      'CheckpointData',
+      CheckpointSummary,
+      AuthorityQuorumSignInfo,
+    ),
+    checkpoint_contents: CheckpointContents,
+    transactions: bcs.vector(CheckpointTransaction),
+  }),
+)
 export const ZkLoginAuthenticatorAsBytes = bcs.vector(bcs.u8())
 export const CompressedSignature = bcs.enum('CompressedSignature', {
   Ed25519: bcs.fixedArray(64, bcs.u8()),
@@ -783,12 +794,4 @@ export const MultiSig = bcs.struct('MultiSig', {
 export const ObjectInfoRequestKind = bcs.enum('ObjectInfoRequestKind', {
   LatestObjectInfo: null,
   PastObjectInfoDebug: SequenceNumber,
-})
-export const TypedStoreError = bcs.enum('TypedStoreError', {
-  RocksDBError: bcs.string(),
-  SerializationError: bcs.string(),
-  UnregisteredColumn: bcs.string(),
-  CrossDBBatch: null,
-  MetricsReporting: null,
-  RetryableTransactionError: null,
 })

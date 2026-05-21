@@ -1,108 +1,51 @@
-export function IntentMessage(value: any): import("@mysten/bcs").BcsType<{
-    intent: {
-        scope: number;
-        version: number;
-        app_id: number;
-    };
-    value: unknown;
-}, {
-    intent: {
-        scope: number;
-        version: number;
-        app_id: number;
-    };
-    value: unknown;
-}>;
-export const LiveObject: import("@mysten/bcs").BcsType<import("@mysten/bcs").EnumOutputShapeWithKeys<{
-    Normal: {
-        data: import("@mysten/bcs").EnumOutputShapeWithKeys<{
-            Move: {
-                type: import("@mysten/bcs").EnumOutputShapeWithKeys<{
-                    Other: {
-                        address: number[];
-                        module: string;
-                        name: string;
-                        type_args: any[];
-                    };
-                    GasCoin: unknown;
-                    StakedSui: unknown;
-                    Coin: unknown;
-                }, "GasCoin" | "Other" | "StakedSui" | "Coin">;
-                has_public_transfer: boolean;
-                version: string;
-                contents: number[];
-            };
-            Package: {
-                id: number[];
-                version: string;
-                module_map: Map<string, number[]>;
-                type_origin_table: {
+export function IntentMessage(value: any): import("@mysten/bcs").BcsStruct<{
+    intent: import("@mysten/bcs").BcsStruct<{
+        scope: import("@mysten/bcs").BcsType<number, number, "u8">;
+        version: import("@mysten/bcs").BcsType<number, number, "u8">;
+        app_id: import("@mysten/bcs").BcsType<number, number, "u8">;
+    }, string>;
+    value: any;
+}, string>;
+export const LiveObject: import("@mysten/bcs").BcsEnum<{
+    Normal: import("@mysten/bcs").BcsStruct<{
+        data: import("@mysten/bcs").BcsEnum<{
+            Move: import("@mysten/bcs").BcsStruct<{
+                type: import("@mysten/bcs").BcsEnum<{
+                    Other: import("@mysten/bcs").BcsStruct<{
+                        address: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+                            length: number;
+                        }, string>;
+                        module: import("@mysten/bcs").BcsType<string, string, "string">;
+                        name: import("@mysten/bcs").BcsType<string, string, "string">;
+                        type_args: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
+                            length: number;
+                        }, string>;
+                    }, string>;
+                    GasCoin: any;
+                    StakedSui: any;
+                    Coin: any;
+                    SuiBalanceAccumulatorField: any;
+                    BalanceAccumulatorField: any;
+                }, "MoveObjectType_">;
+                has_public_transfer: import("@mysten/bcs").BcsType<boolean, boolean, "bool">;
+                version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                contents: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+                    length: number;
+                }, string>;
+            }, string>;
+            Package: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+                    length: number;
+                }, string>;
+                version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                module_map: import("@mysten/bcs").BcsType<Map<string, number[]>, Map<string, Iterable<number> & {
+                    length: number;
+                }>, "Map<string, vector<u8>>">;
+                type_origin_table: import("@mysten/bcs").BcsType<{
                     module_name: string;
                     datatype_name: string;
                     package: number[];
-                }[];
-                linkage_table: Map<number[], {
-                    upgraded_id: number[];
-                    upgraded_version: string;
-                }>;
-            };
-        }, "Move" | "Package">;
-        owner: import("@mysten/bcs").EnumOutputShapeWithKeys<{
-            AddressOwner: number[];
-            ObjectOwner: number[];
-            Shared: {
-                initial_shared_version: string;
-            };
-            Immutable: unknown;
-            ConsensusV2: {
-                start_version: string;
-                authenticator: {
-                    SingleOwner: number[];
-                    $kind: "SingleOwner";
-                };
-            };
-        }, "AddressOwner" | "ObjectOwner" | "Shared" | "Immutable" | "ConsensusV2">;
-        previous_transaction: number[];
-        storage_rebate: string;
-    };
-    Wrapped: {
-        object_id: number[];
-        version: string;
-    };
-}, "Normal" | "Wrapped">, import("@mysten/bcs").EnumInputShape<{
-    Normal: {
-        data: import("@mysten/bcs").EnumInputShape<{
-            Move: {
-                type: import("@mysten/bcs").EnumInputShape<{
-                    Other: {
-                        address: Iterable<number> & {
-                            length: number;
-                        };
-                        module: string;
-                        name: string;
-                        type_args: Iterable<any> & {
-                            length: number;
-                        };
-                    };
-                    GasCoin: unknown;
-                    StakedSui: unknown;
-                    Coin: unknown;
-                }>;
-                has_public_transfer: boolean;
-                version: string | number | bigint;
-                contents: Iterable<number> & {
-                    length: number;
-                };
-            };
-            Package: {
-                id: Iterable<number> & {
-                    length: number;
-                };
-                version: string | number | bigint;
-                module_map: Map<string, Iterable<number> & {
-                    length: number;
-                }>;
-                type_origin_table: Iterable<{
+                }[], Iterable<{
                     module_name: string;
                     datatype_name: string;
                     package: Iterable<number> & {
@@ -110,54 +53,55 @@ export const LiveObject: import("@mysten/bcs").BcsType<import("@mysten/bcs").Enu
                     };
                 }> & {
                     length: number;
-                };
-                linkage_table: Map<Iterable<number> & {
+                }, string>;
+                linkage_table: import("@mysten/bcs").BcsType<Map<number[], {
+                    upgraded_id: number[];
+                    upgraded_version: string;
+                }>, Map<Iterable<number> & {
                     length: number;
                 }, {
                     upgraded_id: Iterable<number> & {
                         length: number;
                     };
                     upgraded_version: string | number | bigint;
-                }>;
-            };
-        }>;
-        owner: import("@mysten/bcs").EnumInputShape<{
-            AddressOwner: Iterable<number> & {
+                }>, `Map<${string}, ${string}>`>;
+            }, string>;
+        }, "Data">;
+        owner: import("@mysten/bcs").BcsEnum<{
+            AddressOwner: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
-            };
-            ObjectOwner: Iterable<number> & {
+            }, string>;
+            ObjectOwner: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
-            };
-            Shared: {
-                initial_shared_version: string | number | bigint;
-            };
-            Immutable: unknown;
-            ConsensusV2: {
-                start_version: string | number | bigint;
-                authenticator: {
-                    SingleOwner: Iterable<number> & {
-                        length: number;
-                    };
-                };
-            };
-        }>;
-        previous_transaction: Iterable<number> & {
+            }, string>;
+            Shared: import("@mysten/bcs").BcsStruct<{
+                initial_shared_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            }, string>;
+            Immutable: any;
+            ConsensusAddressOwner: import("@mysten/bcs").BcsStruct<{
+                start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                owner: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+                    length: number;
+                }, string>;
+            }, string>;
+        }, "Owner">;
+        previous_transaction: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
             length: number;
-        };
-        storage_rebate: string | number | bigint;
-    };
-    Wrapped: {
-        object_id: Iterable<number> & {
+        }, "vector<u8>">;
+        storage_rebate: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+    }, string>;
+    Wrapped: import("@mysten/bcs").BcsStruct<{
+        object_id: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
             length: number;
-        };
-        version: string | number | bigint;
-    };
-}>>;
-export const Manifest: import("@mysten/bcs").BcsType<{
-    V1: {
-        snapshot_version: number;
-        address_length: string;
-        file_metadata: {
+        }, string>;
+        version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+    }, string>;
+}, "LiveObject">;
+export const Manifest: import("@mysten/bcs").BcsEnum<{
+    V1: import("@mysten/bcs").BcsStruct<{
+        snapshot_version: import("@mysten/bcs").BcsType<number, number, "u8">;
+        address_length: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        file_metadata: import("@mysten/bcs").BcsType<{
             file_type: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                 Object: unknown;
                 Reference: unknown;
@@ -169,15 +113,7 @@ export const Manifest: import("@mysten/bcs").BcsType<{
                 Zstd: unknown;
             }, "None" | "Zstd">;
             sha3_digest: number[];
-        }[];
-        epoch: string;
-    };
-    $kind: "V1";
-}, {
-    V1: {
-        snapshot_version: number;
-        address_length: string | number | bigint;
-        file_metadata: Iterable<{
+        }[], Iterable<{
             file_type: import("@mysten/bcs").EnumInputShape<{
                 Object: unknown;
                 Reference: unknown;
@@ -193,7 +129,7 @@ export const Manifest: import("@mysten/bcs").BcsType<{
             };
         }> & {
             length: number;
-        };
-        epoch: string | number | bigint;
-    };
-}>;
+        }, string>;
+        epoch: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+    }, string>;
+}, "Manifest">;

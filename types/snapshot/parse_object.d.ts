@@ -18,12 +18,14 @@ export function parse_objects({ buffer, file_compression }: {
                         address: number[];
                         module: string;
                         name: string;
-                        type_args: any[];
+                        type_args: unknown[];
                     };
                     GasCoin: unknown;
                     StakedSui: unknown;
                     Coin: unknown;
-                }, "GasCoin" | "Other" | "StakedSui" | "Coin">;
+                    SuiBalanceAccumulatorField: unknown;
+                    BalanceAccumulatorField: unknown;
+                }, "GasCoin" | "Other" | "StakedSui" | "Coin" | "SuiBalanceAccumulatorField" | "BalanceAccumulatorField">;
                 has_public_transfer: boolean;
                 version: string;
                 contents: number[];
@@ -50,14 +52,11 @@ export function parse_objects({ buffer, file_compression }: {
                 initial_shared_version: string;
             };
             Immutable: unknown;
-            ConsensusV2: {
+            ConsensusAddressOwner: {
                 start_version: string;
-                authenticator: {
-                    SingleOwner: number[];
-                    $kind: "SingleOwner";
-                };
+                owner: number[];
             };
-        }, "AddressOwner" | "ObjectOwner" | "Shared" | "Immutable" | "ConsensusV2">;
+        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">;
         previous_transaction: number[];
         storage_rebate: string;
     };

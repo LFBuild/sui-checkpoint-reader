@@ -1,84 +1,53 @@
 declare namespace _default {
     export namespace authenticator_state {
-        let ActiveJwk: import("@mysten/bcs").BcsType<{
-            jwk_id: {
-                iss: {
-                    bytes: number[];
-                };
-                kid: {
-                    bytes: number[];
-                };
-            };
-            jwk: {
-                kty: {
-                    bytes: number[];
-                };
-                e: {
-                    bytes: number[];
-                };
-                n: {
-                    bytes: number[];
-                };
-                alg: {
-                    bytes: number[];
-                };
-            };
-            epoch: string;
-        }, {
-            jwk_id: {
-                iss: {
-                    bytes: Iterable<number> & {
+        let ActiveJwk: import("@mysten/bcs").BcsStruct<{
+            jwk_id: import("@mysten/bcs").BcsStruct<{
+                iss: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                         length: number;
-                    };
-                };
-                kid: {
-                    bytes: Iterable<number> & {
+                    }, string>;
+                }, string>;
+                kid: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                         length: number;
-                    };
-                };
-            };
-            jwk: {
-                kty: {
-                    bytes: Iterable<number> & {
+                    }, string>;
+                }, string>;
+            }, string>;
+            jwk: import("@mysten/bcs").BcsStruct<{
+                kty: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                         length: number;
-                    };
-                };
-                e: {
-                    bytes: Iterable<number> & {
+                    }, string>;
+                }, string>;
+                e: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                         length: number;
-                    };
-                };
-                n: {
-                    bytes: Iterable<number> & {
+                    }, string>;
+                }, string>;
+                n: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                         length: number;
-                    };
-                };
-                alg: {
-                    bytes: Iterable<number> & {
+                    }, string>;
+                }, string>;
+                alg: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                         length: number;
-                    };
-                };
-            };
-            epoch: string | number | bigint;
-        }>;
-        let AuthenticatorState: import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            version: string;
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            version: string | number | bigint;
-        }>;
-        let AuthenticatorStateInner: import("@mysten/bcs").BcsType<{
-            version: string;
-            active_jwks: {
+                    }, string>;
+                }, string>;
+            }, string>;
+            epoch: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        }, string>;
+        let AuthenticatorState: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        }, string>;
+        let AuthenticatorStateInner: import("@mysten/bcs").BcsStruct<{
+            version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            active_jwks: import("@mysten/bcs").BcsType<{
                 jwk_id: {
                     iss: {
                         bytes: number[];
@@ -102,10 +71,7 @@ declare namespace _default {
                     };
                 };
                 epoch: string;
-            }[];
-        }, {
-            version: string | number | bigint;
-            active_jwks: Iterable<{
+            }[], Iterable<{
                 jwk_id: {
                     iss: {
                         bytes: Iterable<number> & {
@@ -143,1599 +109,969 @@ declare namespace _default {
                 epoch: string | number | bigint;
             }> & {
                 length: number;
-            };
-        }>;
-        let JWK: import("@mysten/bcs").BcsType<{
-            kty: {
-                bytes: number[];
-            };
-            e: {
-                bytes: number[];
-            };
-            n: {
-                bytes: number[];
-            };
-            alg: {
-                bytes: number[];
-            };
-        }, {
-            kty: {
-                bytes: Iterable<number> & {
+            }, string>;
+        }, string>;
+        let JWK: import("@mysten/bcs").BcsStruct<{
+            kty: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-            e: {
-                bytes: Iterable<number> & {
+                }, string>;
+            }, string>;
+            e: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-            n: {
-                bytes: Iterable<number> & {
+                }, string>;
+            }, string>;
+            n: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-            alg: {
-                bytes: Iterable<number> & {
+                }, string>;
+            }, string>;
+            alg: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-        }>;
-        let JwkId: import("@mysten/bcs").BcsType<{
-            iss: {
-                bytes: number[];
-            };
-            kid: {
-                bytes: number[];
-            };
-        }, {
-            iss: {
-                bytes: Iterable<number> & {
+                }, string>;
+            }, string>;
+        }, string>;
+        let JwkId: import("@mysten/bcs").BcsStruct<{
+            iss: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-            kid: {
-                bytes: Iterable<number> & {
+                }, string>;
+            }, string>;
+            kid: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-        }>;
+                }, string>;
+            }, string>;
+        }, string>;
     }
     export namespace bag {
-        let Bag: import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            size: string;
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            size: string | number | bigint;
-        }>;
+        let Bag: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            size: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        }, string>;
     }
     export namespace balance {
-        function Balance(T0: any): import("@mysten/bcs").BcsType<{
-            value: string;
-        }, {
-            value: string | number | bigint;
-        }>;
-        function Supply(T0: any): import("@mysten/bcs").BcsType<{
-            value: string;
-        }, {
-            value: string | number | bigint;
-        }>;
+        function Balance(T0: any): import("@mysten/bcs").BcsStruct<{
+            value: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        }, string>;
+        function Supply(T0: any): import("@mysten/bcs").BcsStruct<{
+            value: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        }, string>;
     }
     export namespace bcs {
-        let BCS: import("@mysten/bcs").BcsType<{
-            bytes: number[];
-        }, {
-            bytes: Iterable<number> & {
+        let BCS: import("@mysten/bcs").BcsStruct<{
+            bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
-            };
-        }>;
+            }, string>;
+        }, string>;
     }
     export namespace bls12381 {
-        let G1: import("@mysten/bcs").BcsType<{
-            dummy_field: boolean;
-        }, {
-            dummy_field: boolean;
-        }>;
-        let G2: import("@mysten/bcs").BcsType<{
-            dummy_field: boolean;
-        }, {
-            dummy_field: boolean;
-        }>;
-        let GT: import("@mysten/bcs").BcsType<{
-            dummy_field: boolean;
-        }, {
-            dummy_field: boolean;
-        }>;
-        let Scalar: import("@mysten/bcs").BcsType<{
-            dummy_field: boolean;
-        }, {
-            dummy_field: boolean;
-        }>;
-        let UncompressedG1: import("@mysten/bcs").BcsType<{
-            dummy_field: boolean;
-        }, {
-            dummy_field: boolean;
-        }>;
+        let G1: import("@mysten/bcs").BcsStruct<{
+            dummy_field: import("@mysten/bcs").BcsType<boolean, boolean, "bool">;
+        }, string>;
+        let G2: import("@mysten/bcs").BcsStruct<{
+            dummy_field: import("@mysten/bcs").BcsType<boolean, boolean, "bool">;
+        }, string>;
+        let GT: import("@mysten/bcs").BcsStruct<{
+            dummy_field: import("@mysten/bcs").BcsType<boolean, boolean, "bool">;
+        }, string>;
+        let Scalar: import("@mysten/bcs").BcsStruct<{
+            dummy_field: import("@mysten/bcs").BcsType<boolean, boolean, "bool">;
+        }, string>;
+        let UncompressedG1: import("@mysten/bcs").BcsStruct<{
+            dummy_field: import("@mysten/bcs").BcsType<boolean, boolean, "bool">;
+        }, string>;
     }
     export namespace borrow {
-        let Borrow: import("@mysten/bcs").BcsType<{
-            ref: string;
-            obj: {
-                bytes: string;
-            };
-        }, {
-            ref: any;
-            obj: {
-                bytes: any;
-            };
-        }>;
-        function Referent(T0: any): import("@mysten/bcs").BcsType<{
-            id: string;
-            value: {
-                vec: any[];
-            };
-        }, {
-            id: any;
-            value: {
-                vec: Iterable<any> & {
+        let Borrow: import("@mysten/bcs").BcsStruct<{
+            ref: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            obj: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+        }, string>;
+        function Referent(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            value: import("@mysten/bcs").BcsStruct<{
+                vec: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                     length: number;
-                };
-            };
-        }>;
+                }, string>;
+            }, string>;
+        }, string>;
     }
     export namespace clock {
-        let Clock: import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            timestamp_ms: string;
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            timestamp_ms: string | number | bigint;
-        }>;
+        let Clock: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            timestamp_ms: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        }, string>;
     }
     export namespace coin {
-        function Coin(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            balance: {
-                value: string;
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            balance: {
-                value: string | number | bigint;
-            };
-        }>;
-        function CoinMetadata(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            decimals: number;
-            name: {
-                bytes: number[];
-            };
-            symbol: {
-                bytes: number[];
-            };
-            description: {
-                bytes: number[];
-            };
-            icon_url: {
-                vec: any[];
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            decimals: number;
-            name: {
-                bytes: Iterable<number> & {
+        function Coin(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            balance: import("@mysten/bcs").BcsStruct<{
+                value: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            }, string>;
+        }, string>;
+        function CoinMetadata(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            decimals: import("@mysten/bcs").BcsType<number, number, "u8">;
+            name: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-            symbol: {
-                bytes: Iterable<number> & {
+                }, string>;
+            }, string>;
+            symbol: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-            description: {
-                bytes: Iterable<number> & {
+                }, string>;
+            }, string>;
+            description: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-            icon_url: {
-                vec: Iterable<any> & {
+                }, string>;
+            }, string>;
+            icon_url: import("@mysten/bcs").BcsStruct<{
+                vec: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                     length: number;
-                };
-            };
-        }>;
-        function CurrencyCreated(T0: any): import("@mysten/bcs").BcsType<{
-            decimals: number;
-        }, {
-            decimals: number;
-        }>;
-        function DenyCap(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-        }>;
-        function DenyCapV2(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            allow_global_pause: boolean;
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            allow_global_pause: boolean;
-        }>;
-        function RegulatedCoinMetadata(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            coin_metadata_object: {
-                bytes: string;
-            };
-            deny_cap_object: {
-                bytes: string;
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            coin_metadata_object: {
-                bytes: any;
-            };
-            deny_cap_object: {
-                bytes: any;
-            };
-        }>;
-        function TreasuryCap(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            total_supply: {
-                value: string;
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            total_supply: {
-                value: string | number | bigint;
-            };
-        }>;
+                }, string>;
+            }, string>;
+        }, string>;
+        function CurrencyCreated(T0: any): import("@mysten/bcs").BcsStruct<{
+            decimals: import("@mysten/bcs").BcsType<number, number, "u8">;
+        }, string>;
+        function DenyCap(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+        }, string>;
+        function DenyCapV2(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            allow_global_pause: import("@mysten/bcs").BcsType<boolean, boolean, "bool">;
+        }, string>;
+        function RegulatedCoinMetadata(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            coin_metadata_object: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            deny_cap_object: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+        }, string>;
+        function TreasuryCap(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            total_supply: import("@mysten/bcs").BcsStruct<{
+                value: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            }, string>;
+        }, string>;
     }
     export namespace config {
-        function Config(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-        }>;
-        function Setting(T0: any): import("@mysten/bcs").BcsType<{
-            data: {
-                vec: any[];
-            };
-        }, {
-            data: {
-                vec: Iterable<any> & {
+        function Config(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+        }, string>;
+        function Setting(T0: any): import("@mysten/bcs").BcsStruct<{
+            data: import("@mysten/bcs").BcsStruct<{
+                vec: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                     length: number;
-                };
-            };
-        }>;
-        function SettingData(T0: any): import("@mysten/bcs").BcsType<{
-            newer_value_epoch: string;
-            newer_value: {
-                vec: any[];
-            };
-            older_value_opt: {
-                vec: any[];
-            };
-        }, {
-            newer_value_epoch: string | number | bigint;
-            newer_value: {
-                vec: Iterable<any> & {
+                }, string>;
+            }, string>;
+        }, string>;
+        function SettingData(T0: any): import("@mysten/bcs").BcsStruct<{
+            newer_value_epoch: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            newer_value: import("@mysten/bcs").BcsStruct<{
+                vec: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                     length: number;
-                };
-            };
-            older_value_opt: {
-                vec: Iterable<any> & {
+                }, string>;
+            }, string>;
+            older_value_opt: import("@mysten/bcs").BcsStruct<{
+                vec: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                     length: number;
-                };
-            };
-        }>;
+                }, string>;
+            }, string>;
+        }, string>;
     }
     export namespace deny_list {
-        let AddressKey: import("@mysten/bcs").BcsType<{
-            pos0: string;
-        }, {
-            pos0: any;
-        }>;
-        let ConfigKey: import("@mysten/bcs").BcsType<{
-            per_type_index: string;
-            per_type_key: number[];
-        }, {
-            per_type_index: string | number | bigint;
-            per_type_key: Iterable<number> & {
+        let AddressKey: import("@mysten/bcs").BcsStruct<{
+            pos0: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+        }, string>;
+        let ConfigKey: import("@mysten/bcs").BcsStruct<{
+            per_type_index: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            per_type_key: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
-            };
-        }>;
-        let ConfigWriteCap: import("@mysten/bcs").BcsType<{
-            dummy_field: boolean;
-        }, {
-            dummy_field: boolean;
-        }>;
-        let DenyList: import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            lists: {
-                id: {
-                    id: {
-                        bytes: string;
-                    };
-                };
-                size: string;
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            lists: {
-                id: {
-                    id: {
-                        bytes: any;
-                    };
-                };
-                size: string | number | bigint;
-            };
-        }>;
-        let GlobalPauseKey: import("@mysten/bcs").BcsType<{
-            dummy_field: boolean;
-        }, {
-            dummy_field: boolean;
-        }>;
-        let PerTypeConfigCreated: import("@mysten/bcs").BcsType<{
-            key: {
-                per_type_index: string;
-                per_type_key: number[];
-            };
-            config_id: {
-                bytes: string;
-            };
-        }, {
-            key: {
-                per_type_index: string | number | bigint;
-                per_type_key: Iterable<number> & {
+            }, string>;
+        }, string>;
+        let ConfigWriteCap: import("@mysten/bcs").BcsStruct<{
+            dummy_field: import("@mysten/bcs").BcsType<boolean, boolean, "bool">;
+        }, string>;
+        let DenyList: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            lists: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    id: import("@mysten/bcs").BcsStruct<{
+                        bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                    }, string>;
+                }, string>;
+                size: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            }, string>;
+        }, string>;
+        let GlobalPauseKey: import("@mysten/bcs").BcsStruct<{
+            dummy_field: import("@mysten/bcs").BcsType<boolean, boolean, "bool">;
+        }, string>;
+        let PerTypeConfigCreated: import("@mysten/bcs").BcsStruct<{
+            key: import("@mysten/bcs").BcsStruct<{
+                per_type_index: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                per_type_key: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-            config_id: {
-                bytes: any;
-            };
-        }>;
-        let PerTypeList: import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            denied_count: {
-                id: {
-                    id: {
-                        bytes: string;
-                    };
-                };
-                size: string;
-            };
-            denied_addresses: {
-                id: {
-                    id: {
-                        bytes: string;
-                    };
-                };
-                size: string;
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            denied_count: {
-                id: {
-                    id: {
-                        bytes: any;
-                    };
-                };
-                size: string | number | bigint;
-            };
-            denied_addresses: {
-                id: {
-                    id: {
-                        bytes: any;
-                    };
-                };
-                size: string | number | bigint;
-            };
-        }>;
+                }, string>;
+            }, string>;
+            config_id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+        }, string>;
+        let PerTypeList: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            denied_count: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    id: import("@mysten/bcs").BcsStruct<{
+                        bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                    }, string>;
+                }, string>;
+                size: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            }, string>;
+            denied_addresses: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    id: import("@mysten/bcs").BcsStruct<{
+                        bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                    }, string>;
+                }, string>;
+                size: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            }, string>;
+        }, string>;
     }
     export namespace display {
-        function Display(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            fields: {
-                contents: {
+        function Display(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            fields: import("@mysten/bcs").BcsStruct<{
+                contents: import("@mysten/bcs").BcsType<{
                     key: unknown;
                     value: unknown;
-                }[];
-            };
-            version: number;
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            fields: {
-                contents: Iterable<{
+                }[], Iterable<{
                     key: unknown;
                     value: unknown;
                 }> & {
                     length: number;
-                };
-            };
-            version: number;
-        }>;
-        function DisplayCreated(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                bytes: string;
-            };
-        }, {
-            id: {
-                bytes: any;
-            };
-        }>;
-        function VersionUpdated(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                bytes: string;
-            };
-            version: number;
-            fields: {
-                contents: {
+                }, string>;
+            }, string>;
+            version: import("@mysten/bcs").BcsType<number, number, "u16">;
+        }, string>;
+        function DisplayCreated(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+        }, string>;
+        function VersionUpdated(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            version: import("@mysten/bcs").BcsType<number, number, "u16">;
+            fields: import("@mysten/bcs").BcsStruct<{
+                contents: import("@mysten/bcs").BcsType<{
                     key: unknown;
                     value: unknown;
-                }[];
-            };
-        }, {
-            id: {
-                bytes: any;
-            };
-            version: number;
-            fields: {
-                contents: Iterable<{
+                }[], Iterable<{
                     key: unknown;
                     value: unknown;
                 }> & {
                     length: number;
-                };
-            };
-        }>;
+                }, string>;
+            }, string>;
+        }, string>;
     }
     export namespace dynamic_field {
-        function Field(T0: any, T1: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            name: unknown;
-            value: unknown;
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            name: unknown;
-            value: unknown;
-        }>;
+        function Field(T0: any, T1: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            name: any;
+            value: any;
+        }, string>;
     }
     export namespace dynamic_object_field {
-        function Wrapper(T0: any): import("@mysten/bcs").BcsType<{
-            name: unknown;
-        }, {
-            name: unknown;
-        }>;
+        function Wrapper(T0: any): import("@mysten/bcs").BcsStruct<{
+            name: any;
+        }, string>;
     }
     export namespace groth16 {
-        let Curve: import("@mysten/bcs").BcsType<{
-            id: number;
-        }, {
-            id: number;
-        }>;
-        let PreparedVerifyingKey: import("@mysten/bcs").BcsType<{
-            vk_gamma_abc_g1_bytes: number[];
-            alpha_g1_beta_g2_bytes: number[];
-            gamma_g2_neg_pc_bytes: number[];
-            delta_g2_neg_pc_bytes: number[];
-        }, {
-            vk_gamma_abc_g1_bytes: Iterable<number> & {
+        let Curve: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsType<number, number, "u8">;
+        }, string>;
+        let PreparedVerifyingKey: import("@mysten/bcs").BcsStruct<{
+            vk_gamma_abc_g1_bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
-            };
-            alpha_g1_beta_g2_bytes: Iterable<number> & {
+            }, string>;
+            alpha_g1_beta_g2_bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
-            };
-            gamma_g2_neg_pc_bytes: Iterable<number> & {
+            }, string>;
+            gamma_g2_neg_pc_bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
-            };
-            delta_g2_neg_pc_bytes: Iterable<number> & {
+            }, string>;
+            delta_g2_neg_pc_bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
-            };
-        }>;
-        let ProofPoints: import("@mysten/bcs").BcsType<{
-            bytes: number[];
-        }, {
-            bytes: Iterable<number> & {
+            }, string>;
+        }, string>;
+        let ProofPoints: import("@mysten/bcs").BcsStruct<{
+            bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
-            };
-        }>;
-        let PublicProofInputs: import("@mysten/bcs").BcsType<{
-            bytes: number[];
-        }, {
-            bytes: Iterable<number> & {
+            }, string>;
+        }, string>;
+        let PublicProofInputs: import("@mysten/bcs").BcsStruct<{
+            bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
-            };
-        }>;
+            }, string>;
+        }, string>;
     }
     export namespace group_ops {
-        function Element(T0: any): import("@mysten/bcs").BcsType<{
-            bytes: number[];
-        }, {
-            bytes: Iterable<number> & {
+        function Element(T0: any): import("@mysten/bcs").BcsStruct<{
+            bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
-            };
-        }>;
+            }, string>;
+        }, string>;
     }
     export namespace kiosk {
-        let Borrow_1: import("@mysten/bcs").BcsType<{
-            kiosk_id: {
-                bytes: string;
-            };
-            item_id: {
-                bytes: string;
-            };
-        }, {
-            kiosk_id: {
-                bytes: any;
-            };
-            item_id: {
-                bytes: any;
-            };
-        }>;
+        let Borrow_1: import("@mysten/bcs").BcsStruct<{
+            kiosk_id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            item_id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+        }, string>;
         export { Borrow_1 as Borrow };
-        export let Item: import("@mysten/bcs").BcsType<{
-            id: {
-                bytes: string;
-            };
-        }, {
-            id: {
-                bytes: any;
-            };
-        }>;
-        export function ItemDelisted(T0: any): import("@mysten/bcs").BcsType<{
-            kiosk: {
-                bytes: string;
-            };
-            id: {
-                bytes: string;
-            };
-        }, {
-            kiosk: {
-                bytes: any;
-            };
-            id: {
-                bytes: any;
-            };
-        }>;
-        export function ItemListed(T0: any): import("@mysten/bcs").BcsType<{
-            kiosk: {
-                bytes: string;
-            };
-            id: {
-                bytes: string;
-            };
-            price: string;
-        }, {
-            kiosk: {
-                bytes: any;
-            };
-            id: {
-                bytes: any;
-            };
-            price: string | number | bigint;
-        }>;
-        export function ItemPurchased(T0: any): import("@mysten/bcs").BcsType<{
-            kiosk: {
-                bytes: string;
-            };
-            id: {
-                bytes: string;
-            };
-            price: string;
-        }, {
-            kiosk: {
-                bytes: any;
-            };
-            id: {
-                bytes: any;
-            };
-            price: string | number | bigint;
-        }>;
-        export let Kiosk: import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            profits: {
-                value: string;
-            };
-            owner: string;
-            item_count: number;
-            allow_extensions: boolean;
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            profits: {
-                value: string | number | bigint;
-            };
-            owner: any;
-            item_count: number;
-            allow_extensions: boolean;
-        }>;
-        export let KioskOwnerCap: import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            for: {
-                bytes: string;
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            for: {
-                bytes: any;
-            };
-        }>;
-        export let Listing: import("@mysten/bcs").BcsType<{
-            id: {
-                bytes: string;
-            };
-            is_exclusive: boolean;
-        }, {
-            id: {
-                bytes: any;
-            };
-            is_exclusive: boolean;
-        }>;
-        export let Lock: import("@mysten/bcs").BcsType<{
-            id: {
-                bytes: string;
-            };
-        }, {
-            id: {
-                bytes: any;
-            };
-        }>;
-        export function PurchaseCap(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            kiosk_id: {
-                bytes: string;
-            };
-            item_id: {
-                bytes: string;
-            };
-            min_price: string;
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            kiosk_id: {
-                bytes: any;
-            };
-            item_id: {
-                bytes: any;
-            };
-            min_price: string | number | bigint;
-        }>;
+        export let Item: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+        }, string>;
+        export function ItemDelisted(T0: any): import("@mysten/bcs").BcsStruct<{
+            kiosk: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+        }, string>;
+        export function ItemListed(T0: any): import("@mysten/bcs").BcsStruct<{
+            kiosk: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            price: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        }, string>;
+        export function ItemPurchased(T0: any): import("@mysten/bcs").BcsStruct<{
+            kiosk: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            price: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        }, string>;
+        export let Kiosk: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            profits: import("@mysten/bcs").BcsStruct<{
+                value: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            }, string>;
+            owner: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            item_count: import("@mysten/bcs").BcsType<number, number, "u32">;
+            allow_extensions: import("@mysten/bcs").BcsType<boolean, boolean, "bool">;
+        }, string>;
+        export let KioskOwnerCap: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            for: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+        }, string>;
+        export let Listing: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            is_exclusive: import("@mysten/bcs").BcsType<boolean, boolean, "bool">;
+        }, string>;
+        export let Lock: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+        }, string>;
+        export function PurchaseCap(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            kiosk_id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            item_id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            min_price: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        }, string>;
     }
     export namespace kiosk_extension {
-        let Extension: import("@mysten/bcs").BcsType<{
-            storage: {
-                id: {
-                    id: {
-                        bytes: string;
-                    };
-                };
-                size: string;
-            };
-            permissions: string;
-            is_enabled: boolean;
-        }, {
-            storage: {
-                id: {
-                    id: {
-                        bytes: any;
-                    };
-                };
-                size: string | number | bigint;
-            };
-            permissions: string | number | bigint;
-            is_enabled: boolean;
-        }>;
-        function ExtensionKey(T0: any): import("@mysten/bcs").BcsType<{
-            dummy_field: boolean;
-        }, {
-            dummy_field: boolean;
-        }>;
+        let Extension: import("@mysten/bcs").BcsStruct<{
+            storage: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    id: import("@mysten/bcs").BcsStruct<{
+                        bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                    }, string>;
+                }, string>;
+                size: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            }, string>;
+            permissions: import("@mysten/bcs").BcsType<string, string | number | bigint, "u128">;
+            is_enabled: import("@mysten/bcs").BcsType<boolean, boolean, "bool">;
+        }, string>;
+        function ExtensionKey(T0: any): import("@mysten/bcs").BcsStruct<{
+            dummy_field: import("@mysten/bcs").BcsType<boolean, boolean, "bool">;
+        }, string>;
     }
     export namespace linked_table {
-        function LinkedTable(T0: any, T1: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            size: string;
-            head: {
-                vec: any[];
-            };
-            tail: {
-                vec: any[];
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            size: string | number | bigint;
-            head: {
-                vec: Iterable<any> & {
+        function LinkedTable(T0: any, T1: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            size: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            head: import("@mysten/bcs").BcsStruct<{
+                vec: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                     length: number;
-                };
-            };
-            tail: {
-                vec: Iterable<any> & {
+                }, string>;
+            }, string>;
+            tail: import("@mysten/bcs").BcsStruct<{
+                vec: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                     length: number;
-                };
-            };
-        }>;
-        function Node(T0: any, T1: any): import("@mysten/bcs").BcsType<{
-            prev: {
-                vec: any[];
-            };
-            next: {
-                vec: any[];
-            };
-            value: unknown;
-        }, {
-            prev: {
-                vec: Iterable<any> & {
+                }, string>;
+            }, string>;
+        }, string>;
+        function Node(T0: any, T1: any): import("@mysten/bcs").BcsStruct<{
+            prev: import("@mysten/bcs").BcsStruct<{
+                vec: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                     length: number;
-                };
-            };
-            next: {
-                vec: Iterable<any> & {
+                }, string>;
+            }, string>;
+            next: import("@mysten/bcs").BcsStruct<{
+                vec: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                     length: number;
-                };
-            };
-            value: unknown;
-        }>;
+                }, string>;
+            }, string>;
+            value: any;
+        }, string>;
     }
     export namespace nitro_attestation {
-        let NitroAttestationDocument: import("@mysten/bcs").BcsType<{
-            module_id: number[];
-            timestamp: string;
-            digest: number[];
-            pcrs: {
+        let NitroAttestationDocument: import("@mysten/bcs").BcsStruct<{
+            module_id: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+                length: number;
+            }, string>;
+            timestamp: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            digest: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+                length: number;
+            }, string>;
+            pcrs: import("@mysten/bcs").BcsType<{
                 index: number;
                 value: number[];
-            }[];
-            public_key: {
-                vec: any[];
-            };
-            user_data: {
-                vec: any[];
-            };
-            nonce: {
-                vec: any[];
-            };
-        }, {
-            module_id: Iterable<number> & {
-                length: number;
-            };
-            timestamp: string | number | bigint;
-            digest: Iterable<number> & {
-                length: number;
-            };
-            pcrs: Iterable<{
+            }[], Iterable<{
                 index: number;
                 value: Iterable<number> & {
                     length: number;
                 };
             }> & {
                 length: number;
-            };
-            public_key: {
-                vec: Iterable<any> & {
+            }, string>;
+            public_key: import("@mysten/bcs").BcsStruct<{
+                vec: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                     length: number;
-                };
-            };
-            user_data: {
-                vec: Iterable<any> & {
+                }, string>;
+            }, string>;
+            user_data: import("@mysten/bcs").BcsStruct<{
+                vec: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                     length: number;
-                };
-            };
-            nonce: {
-                vec: Iterable<any> & {
+                }, string>;
+            }, string>;
+            nonce: import("@mysten/bcs").BcsStruct<{
+                vec: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                     length: number;
-                };
-            };
-        }>;
-        let PCREntry: import("@mysten/bcs").BcsType<{
-            index: number;
-            value: number[];
-        }, {
-            index: number;
-            value: Iterable<number> & {
+                }, string>;
+            }, string>;
+        }, string>;
+        let PCREntry: import("@mysten/bcs").BcsStruct<{
+            index: import("@mysten/bcs").BcsType<number, number, "u8">;
+            value: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
-            };
-        }>;
+            }, string>;
+        }, string>;
     }
     export namespace object {
-        let ID: import("@mysten/bcs").BcsType<{
-            bytes: string;
-        }, {
-            bytes: any;
-        }>;
-        let UID: import("@mysten/bcs").BcsType<{
-            id: {
-                bytes: string;
-            };
-        }, {
-            id: {
-                bytes: any;
-            };
-        }>;
+        let ID: import("@mysten/bcs").BcsStruct<{
+            bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+        }, string>;
+        let UID: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+        }, string>;
     }
     export namespace object_bag {
-        let ObjectBag: import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            size: string;
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            size: string | number | bigint;
-        }>;
+        let ObjectBag: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            size: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        }, string>;
     }
     export namespace object_table {
-        function ObjectTable(T0: any, T1: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            size: string;
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            size: string | number | bigint;
-        }>;
+        function ObjectTable(T0: any, T1: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            size: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        }, string>;
     }
     export namespace _package {
-        let Publisher: import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            package: {
-                bytes: number[];
-            };
-            module_name: {
-                bytes: number[];
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            package: {
-                bytes: Iterable<number> & {
+        let Publisher: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            package: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-            module_name: {
-                bytes: Iterable<number> & {
+                }, string>;
+            }, string>;
+            module_name: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-        }>;
-        let UpgradeCap: import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            package: {
-                bytes: string;
-            };
-            version: string;
-            policy: number;
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            package: {
-                bytes: any;
-            };
-            version: string | number | bigint;
-            policy: number;
-        }>;
-        let UpgradeReceipt: import("@mysten/bcs").BcsType<{
-            cap: {
-                bytes: string;
-            };
-            package: {
-                bytes: string;
-            };
-        }, {
-            cap: {
-                bytes: any;
-            };
-            package: {
-                bytes: any;
-            };
-        }>;
-        let UpgradeTicket: import("@mysten/bcs").BcsType<{
-            cap: {
-                bytes: string;
-            };
-            package: {
-                bytes: string;
-            };
-            policy: number;
-            digest: number[];
-        }, {
-            cap: {
-                bytes: any;
-            };
-            package: {
-                bytes: any;
-            };
-            policy: number;
-            digest: Iterable<number> & {
+                }, string>;
+            }, string>;
+        }, string>;
+        let UpgradeCap: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            package: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            policy: import("@mysten/bcs").BcsType<number, number, "u8">;
+        }, string>;
+        let UpgradeReceipt: import("@mysten/bcs").BcsStruct<{
+            cap: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            package: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+        }, string>;
+        let UpgradeTicket: import("@mysten/bcs").BcsStruct<{
+            cap: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            package: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            policy: import("@mysten/bcs").BcsType<number, number, "u8">;
+            digest: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
-            };
-        }>;
+            }, string>;
+        }, string>;
     }
     export { _package as package };
     export namespace priority_queue {
-        function Entry(T0: any): import("@mysten/bcs").BcsType<{
-            priority: string;
-            value: unknown;
-        }, {
-            priority: string | number | bigint;
-            value: unknown;
-        }>;
-        function PriorityQueue(T0: any): import("@mysten/bcs").BcsType<{
-            entries: {
+        function Entry(T0: any): import("@mysten/bcs").BcsStruct<{
+            priority: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            value: any;
+        }, string>;
+        function PriorityQueue(T0: any): import("@mysten/bcs").BcsStruct<{
+            entries: import("@mysten/bcs").BcsType<{
                 key: unknown;
                 value: unknown;
-            }[];
-        }, {
-            entries: Iterable<{
+            }[], Iterable<{
                 key: unknown;
                 value: unknown;
             }> & {
                 length: number;
-            };
-        }>;
+            }, string>;
+        }, string>;
     }
     export namespace random {
-        let Random: import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            inner: {
-                id: {
-                    id: {
-                        bytes: string;
-                    };
-                };
-                version: string;
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            inner: {
-                id: {
-                    id: {
-                        bytes: any;
-                    };
-                };
-                version: string | number | bigint;
-            };
-        }>;
-        let RandomGenerator: import("@mysten/bcs").BcsType<{
-            seed: number[];
-            counter: number;
-            buffer: number[];
-        }, {
-            seed: Iterable<number> & {
+        let Random: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            inner: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    id: import("@mysten/bcs").BcsStruct<{
+                        bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                    }, string>;
+                }, string>;
+                version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            }, string>;
+        }, string>;
+        let RandomGenerator: import("@mysten/bcs").BcsStruct<{
+            seed: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
-            };
-            counter: number;
-            buffer: Iterable<number> & {
+            }, string>;
+            counter: import("@mysten/bcs").BcsType<number, number, "u16">;
+            buffer: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
-            };
-        }>;
-        let RandomInner: import("@mysten/bcs").BcsType<{
-            version: string;
-            epoch: string;
-            randomness_round: string;
-            random_bytes: number[];
-        }, {
-            version: string | number | bigint;
-            epoch: string | number | bigint;
-            randomness_round: string | number | bigint;
-            random_bytes: Iterable<number> & {
+            }, string>;
+        }, string>;
+        let RandomInner: import("@mysten/bcs").BcsStruct<{
+            version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            epoch: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            randomness_round: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            random_bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
-            };
-        }>;
+            }, string>;
+        }, string>;
     }
     export namespace sui {
-        let SUI: import("@mysten/bcs").BcsType<{
-            dummy_field: boolean;
-        }, {
-            dummy_field: boolean;
-        }>;
+        let SUI: import("@mysten/bcs").BcsStruct<{
+            dummy_field: import("@mysten/bcs").BcsType<boolean, boolean, "bool">;
+        }, string>;
     }
     export namespace table {
-        function Table(T0: any, T1: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            size: string;
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            size: string | number | bigint;
-        }>;
+        function Table(T0: any, T1: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            size: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        }, string>;
     }
     export namespace table_vec {
-        function TableVec(T0: any): import("@mysten/bcs").BcsType<{
-            contents: {
-                id: {
-                    id: {
-                        bytes: string;
-                    };
-                };
-                size: string;
-            };
-        }, {
-            contents: {
-                id: {
-                    id: {
-                        bytes: any;
-                    };
-                };
-                size: string | number | bigint;
-            };
-        }>;
+        function TableVec(T0: any): import("@mysten/bcs").BcsStruct<{
+            contents: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    id: import("@mysten/bcs").BcsStruct<{
+                        bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                    }, string>;
+                }, string>;
+                size: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            }, string>;
+        }, string>;
     }
     export namespace token {
-        function ActionRequest(T0: any): import("@mysten/bcs").BcsType<{
-            name: {
-                bytes: number[];
-            };
-            amount: string;
-            sender: string;
-            recipient: {
-                vec: any[];
-            };
-            spent_balance: {
-                vec: any[];
-            };
-            approvals: {
-                contents: any[];
-            };
-        }, {
-            name: {
-                bytes: Iterable<number> & {
+        function ActionRequest(T0: any): import("@mysten/bcs").BcsStruct<{
+            name: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-            amount: string | number | bigint;
-            sender: any;
-            recipient: {
-                vec: Iterable<any> & {
+                }, string>;
+            }, string>;
+            amount: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            sender: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            recipient: import("@mysten/bcs").BcsStruct<{
+                vec: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                     length: number;
-                };
-            };
-            spent_balance: {
-                vec: Iterable<any> & {
+                }, string>;
+            }, string>;
+            spent_balance: import("@mysten/bcs").BcsStruct<{
+                vec: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                     length: number;
-                };
-            };
-            approvals: {
-                contents: Iterable<any> & {
+                }, string>;
+            }, string>;
+            approvals: import("@mysten/bcs").BcsStruct<{
+                contents: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                     length: number;
-                };
-            };
-        }>;
-        function RuleKey(T0: any): import("@mysten/bcs").BcsType<{
-            is_protected: boolean;
-        }, {
-            is_protected: boolean;
-        }>;
-        function Token(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            balance: {
-                value: string;
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            balance: {
-                value: string | number | bigint;
-            };
-        }>;
-        function TokenPolicy(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            spent_balance: {
-                value: string;
-            };
-            rules: {
-                contents: {
+                }, string>;
+            }, string>;
+        }, string>;
+        function RuleKey(T0: any): import("@mysten/bcs").BcsStruct<{
+            is_protected: import("@mysten/bcs").BcsType<boolean, boolean, "bool">;
+        }, string>;
+        function Token(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            balance: import("@mysten/bcs").BcsStruct<{
+                value: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            }, string>;
+        }, string>;
+        function TokenPolicy(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            spent_balance: import("@mysten/bcs").BcsStruct<{
+                value: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            }, string>;
+            rules: import("@mysten/bcs").BcsStruct<{
+                contents: import("@mysten/bcs").BcsType<{
                     key: unknown;
                     value: unknown;
-                }[];
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            spent_balance: {
-                value: string | number | bigint;
-            };
-            rules: {
-                contents: Iterable<{
+                }[], Iterable<{
                     key: unknown;
                     value: unknown;
                 }> & {
                     length: number;
-                };
-            };
-        }>;
-        function TokenPolicyCap(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            for: {
-                bytes: string;
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            for: {
-                bytes: any;
-            };
-        }>;
-        function TokenPolicyCreated(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                bytes: string;
-            };
-            is_mutable: boolean;
-        }, {
-            id: {
-                bytes: any;
-            };
-            is_mutable: boolean;
-        }>;
+                }, string>;
+            }, string>;
+        }, string>;
+        function TokenPolicyCap(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            for: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+        }, string>;
+        function TokenPolicyCreated(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            is_mutable: import("@mysten/bcs").BcsType<boolean, boolean, "bool">;
+        }, string>;
     }
     export namespace transfer {
-        function Receiving(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                bytes: string;
-            };
-            version: string;
-        }, {
-            id: {
-                bytes: any;
-            };
-            version: string | number | bigint;
-        }>;
+        function Receiving(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        }, string>;
     }
     export namespace transfer_policy {
-        export function RuleKey_1(T0: any): import("@mysten/bcs").BcsType<{
-            dummy_field: boolean;
-        }, {
-            dummy_field: boolean;
-        }>;
+        export function RuleKey_1(T0: any): import("@mysten/bcs").BcsStruct<{
+            dummy_field: import("@mysten/bcs").BcsType<boolean, boolean, "bool">;
+        }, string>;
         export { RuleKey_1 as RuleKey };
-        export function TransferPolicy(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            balance: {
-                value: string;
-            };
-            rules: {
-                contents: any[];
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            balance: {
-                value: string | number | bigint;
-            };
-            rules: {
-                contents: Iterable<any> & {
+        export function TransferPolicy(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            balance: import("@mysten/bcs").BcsStruct<{
+                value: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            }, string>;
+            rules: import("@mysten/bcs").BcsStruct<{
+                contents: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                     length: number;
-                };
-            };
-        }>;
-        export function TransferPolicyCap(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            policy_id: {
-                bytes: string;
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            policy_id: {
-                bytes: any;
-            };
-        }>;
-        export function TransferPolicyCreated(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                bytes: string;
-            };
-        }, {
-            id: {
-                bytes: any;
-            };
-        }>;
-        export function TransferPolicyDestroyed(T0: any): import("@mysten/bcs").BcsType<{
-            id: {
-                bytes: string;
-            };
-        }, {
-            id: {
-                bytes: any;
-            };
-        }>;
-        export function TransferRequest(T0: any): import("@mysten/bcs").BcsType<{
-            item: {
-                bytes: string;
-            };
-            paid: string;
-            from: {
-                bytes: string;
-            };
-            receipts: {
-                contents: any[];
-            };
-        }, {
-            item: {
-                bytes: any;
-            };
-            paid: string | number | bigint;
-            from: {
-                bytes: any;
-            };
-            receipts: {
-                contents: Iterable<any> & {
+                }, string>;
+            }, string>;
+        }, string>;
+        export function TransferPolicyCap(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            policy_id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+        }, string>;
+        export function TransferPolicyCreated(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+        }, string>;
+        export function TransferPolicyDestroyed(T0: any): import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+        }, string>;
+        export function TransferRequest(T0: any): import("@mysten/bcs").BcsStruct<{
+            item: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            paid: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            from: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            receipts: import("@mysten/bcs").BcsStruct<{
+                contents: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                     length: number;
-                };
-            };
-        }>;
+                }, string>;
+            }, string>;
+        }, string>;
     }
     export namespace tx_context {
-        let TxContext: import("@mysten/bcs").BcsType<{
-            sender: string;
-            tx_hash: number[];
-            epoch: string;
-            epoch_timestamp_ms: string;
-            ids_created: string;
-        }, {
-            sender: any;
-            tx_hash: Iterable<number> & {
+        let TxContext: import("@mysten/bcs").BcsStruct<{
+            sender: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            tx_hash: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
-            };
-            epoch: string | number | bigint;
-            epoch_timestamp_ms: string | number | bigint;
-            ids_created: string | number | bigint;
-        }>;
+            }, string>;
+            epoch: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            epoch_timestamp_ms: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            ids_created: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        }, string>;
     }
     export namespace url {
-        let Url: import("@mysten/bcs").BcsType<{
-            url: {
-                bytes: number[];
-            };
-        }, {
-            url: {
-                bytes: Iterable<number> & {
+        let Url: import("@mysten/bcs").BcsStruct<{
+            url: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-        }>;
+                }, string>;
+            }, string>;
+        }, string>;
     }
     export namespace vec_map {
-        export function Entry_1(T0: any, T1: any): import("@mysten/bcs").BcsType<{
-            key: unknown;
-            value: unknown;
-        }, {
-            key: unknown;
-            value: unknown;
-        }>;
+        export function Entry_1(T0: any, T1: any): import("@mysten/bcs").BcsStruct<{
+            key: any;
+            value: any;
+        }, string>;
         export { Entry_1 as Entry };
-        export function VecMap(T0: any, T1: any): import("@mysten/bcs").BcsType<{
-            contents: {
+        export function VecMap(T0: any, T1: any): import("@mysten/bcs").BcsStruct<{
+            contents: import("@mysten/bcs").BcsType<{
                 key: unknown;
                 value: unknown;
-            }[];
-        }, {
-            contents: Iterable<{
+            }[], Iterable<{
                 key: unknown;
                 value: unknown;
             }> & {
                 length: number;
-            };
-        }>;
+            }, string>;
+        }, string>;
     }
     export namespace vec_set {
-        function VecSet(T0: any): import("@mysten/bcs").BcsType<{
-            contents: any[];
-        }, {
-            contents: Iterable<any> & {
+        function VecSet(T0: any): import("@mysten/bcs").BcsStruct<{
+            contents: import("@mysten/bcs").BcsType<unknown[], Iterable<unknown> & {
                 length: number;
-            };
-        }>;
+            }, string>;
+        }, string>;
     }
     export namespace versioned {
-        let VersionChangeCap: import("@mysten/bcs").BcsType<{
-            versioned_id: {
-                bytes: string;
-            };
-            old_version: string;
-        }, {
-            versioned_id: {
-                bytes: any;
-            };
-            old_version: string | number | bigint;
-        }>;
-        let Versioned: import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            version: string;
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            version: string | number | bigint;
-        }>;
+        let VersionChangeCap: import("@mysten/bcs").BcsStruct<{
+            versioned_id: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            }, string>;
+            old_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        }, string>;
+        let Versioned: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        }, string>;
     }
     export namespace zklogin_verified_id {
-        let VerifiedID: import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            owner: string;
-            key_claim_name: {
-                bytes: number[];
-            };
-            key_claim_value: {
-                bytes: number[];
-            };
-            issuer: {
-                bytes: number[];
-            };
-            audience: {
-                bytes: number[];
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            owner: any;
-            key_claim_name: {
-                bytes: Iterable<number> & {
+        let VerifiedID: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            owner: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            key_claim_name: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-            key_claim_value: {
-                bytes: Iterable<number> & {
+                }, string>;
+            }, string>;
+            key_claim_value: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-            issuer: {
-                bytes: Iterable<number> & {
+                }, string>;
+            }, string>;
+            issuer: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-            audience: {
-                bytes: Iterable<number> & {
+                }, string>;
+            }, string>;
+            audience: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-        }>;
+                }, string>;
+            }, string>;
+        }, string>;
     }
     export namespace zklogin_verified_issuer {
-        let VerifiedIssuer: import("@mysten/bcs").BcsType<{
-            id: {
-                id: {
-                    bytes: string;
-                };
-            };
-            owner: string;
-            issuer: {
-                bytes: number[];
-            };
-        }, {
-            id: {
-                id: {
-                    bytes: any;
-                };
-            };
-            owner: any;
-            issuer: {
-                bytes: Iterable<number> & {
+        let VerifiedIssuer: import("@mysten/bcs").BcsStruct<{
+            id: import("@mysten/bcs").BcsStruct<{
+                id: import("@mysten/bcs").BcsStruct<{
+                    bytes: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+                }, string>;
+            }, string>;
+            owner: import("@mysten/bcs").BcsType<string, string, "bytes[32]">;
+            issuer: import("@mysten/bcs").BcsStruct<{
+                bytes: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
-                };
-            };
-        }>;
+                }, string>;
+            }, string>;
+        }, string>;
     }
 }
 export default _default;

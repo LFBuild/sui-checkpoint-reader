@@ -4,12 +4,41 @@ import { parse } from 'yaml'
 
 const VERSION = 'testnet-v1.72.2'
 const YAML_URL =
-  'https://raw.githubusercontent.com/MystenLabs/sui/{version}/crates/sui-core/tests/staged/sui.yaml'
+  'https://raw.githubusercontent.com/MystenLabs/sui/{version}/crates/sui-types/tests/snapshots/format__sui.yaml.snap'
+
+function strip_insta_snapshot_header(yaml_text) {
+  if (!yaml_text.startsWith('---\n')) return yaml_text
+
+  const header_end = yaml_text.indexOf('\n---\n', 4)
+  if (header_end === -1) return yaml_text
+
+  return yaml_text.slice(header_end + 5)
+}
 
 async function get_type_definitions() {
-  const response = await fetch(YAML_URL.replace('{version}', VERSION))
-  const yamlText = await response.text()
-  return parse(yamlText)
+  const url = YAML_URL.replace('{version}', VERSION)
+  const response = await fetch(url)
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch type definitions (${response.status} ${response.statusText}): ${url}`,
+    )
+  }
+
+  const yamlText = strip_insta_snapshot_header(await response.text())
+  const definitions = parse(yamlText)
+
+  if (
+    !definitions ||
+    typeof definitions !== 'object' ||
+    !definitions.CheckpointData
+  ) {
+    throw new Error(
+      `Fetched YAML does not look like Sui type definitions (missing CheckpointData): ${url}`,
+    )
+  }
+
+  return definitions
 }
 
 function parse_function_type(type_string) {

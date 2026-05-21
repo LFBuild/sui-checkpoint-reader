@@ -1,7 +1,7 @@
 import { bcs, fromHex, toHex } from '@mysten/bcs'
 
 const Address = bcs.bytes(32).transform({
-  input: val => fromHex(val),
+  input: /** @param {string} val */ val => fromHex(val),
   output: val => toHex(val),
 })
 const String = bcs.struct('String', {

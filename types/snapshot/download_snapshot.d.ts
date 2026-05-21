@@ -10,8 +10,8 @@ export function download_snapshot({ network, epoch, concurrent_downloads, save, 
 }): AsyncGenerator<{
     bucket_num: number;
     part_num: number;
-    buffer: Buffer;
-    ref_buffer: Buffer;
+    buffer: Buffer<ArrayBufferLike>;
+    ref_buffer: Buffer<ArrayBufferLike>;
     file_compression: import("@mysten/bcs").EnumOutputShapeWithKeys<{
         None: unknown;
         Zstd: unknown;
