@@ -56,7 +56,14 @@ export function parse_objects({ buffer, file_compression }: {
                 start_version: string;
                 owner: number[];
             };
-        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">;
+            Party: {
+                start_version: string;
+                permissions: {
+                    default_permissions: string;
+                    members: [number[], string][];
+                };
+            };
+        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">;
         previous_transaction: number[];
         storage_rebate: string;
     };

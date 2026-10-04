@@ -84,6 +84,17 @@ export const LiveObject: import("@mysten/bcs").BcsEnum<{
                     length: number;
                 }, string>;
             }, string>;
+            Party: import("@mysten/bcs").BcsStruct<{
+                start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                permissions: import("@mysten/bcs").BcsStruct<{
+                    default_permissions: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                    members: import("@mysten/bcs").BcsType<[number[], string][], Iterable<readonly [Iterable<number> & {
+                        length: number;
+                    }, string | number | bigint]> & {
+                        length: number;
+                    }, string>;
+                }, string>;
+            }, string>;
         }, "Owner">;
         previous_transaction: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
             length: number;

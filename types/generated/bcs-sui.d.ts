@@ -84,6 +84,12 @@ export const ActiveJwk: import("@mysten/bcs").BcsStruct<{
 export const AdditionalConsensusStateDigest: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
     length: number;
 }, "vector<u8>">;
+export const AllowedProposers: import("@mysten/bcs").BcsStruct<{
+    epoch: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+    proposers: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+        length: number;
+    }, string>;
+}, string>;
 export const Argument: import("@mysten/bcs").BcsEnum<{
     GasCoin: any;
     Input: import("@mysten/bcs").BcsType<number, number, "u16">;
@@ -182,6 +188,14 @@ export const WithdrawalTypeArg: import("@mysten/bcs").BcsEnum<{
 export const WithdrawFrom: import("@mysten/bcs").BcsEnum<{
     Sender: any;
     Sponsor: any;
+    SenderAllowance: import("@mysten/bcs").BcsStruct<{
+        funder: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+            length: number;
+        }, string>;
+        allowance: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+            length: number;
+        }, string>;
+    }, string>;
 }, "WithdrawFrom">;
 export const FundsWithdrawalArg: import("@mysten/bcs").BcsStruct<{
     reservation: import("@mysten/bcs").BcsEnum<{
@@ -193,6 +207,14 @@ export const FundsWithdrawalArg: import("@mysten/bcs").BcsStruct<{
     withdraw_from: import("@mysten/bcs").BcsEnum<{
         Sender: any;
         Sponsor: any;
+        SenderAllowance: import("@mysten/bcs").BcsStruct<{
+            funder: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+                length: number;
+            }, string>;
+            allowance: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+                length: number;
+            }, string>;
+        }, string>;
     }, "WithdrawFrom">;
 }, string>;
 export const CallArg: import("@mysten/bcs").BcsEnum<{
@@ -232,6 +254,14 @@ export const CallArg: import("@mysten/bcs").BcsEnum<{
         withdraw_from: import("@mysten/bcs").BcsEnum<{
             Sender: any;
             Sponsor: any;
+            SenderAllowance: import("@mysten/bcs").BcsStruct<{
+                funder: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+                    length: number;
+                }, string>;
+                allowance: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+                    length: number;
+                }, string>;
+            }, string>;
         }, "WithdrawFrom">;
     }, string>;
 }, "CallArg">;
@@ -693,7 +723,11 @@ export const ProgrammableTransaction: import("@mysten/bcs").BcsStruct<{
             withdraw_from: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                 Sender: unknown;
                 Sponsor: unknown;
-            }, "Sender" | "Sponsor">;
+                SenderAllowance: {
+                    funder: number[];
+                    allowance: number[];
+                };
+            }, "Sender" | "Sponsor" | "SenderAllowance">;
         };
     }, "Pure" | "Object" | "FundsWithdrawal">[], Iterable<import("@mysten/bcs").EnumInputShape<{
         Pure: Iterable<number> & {
@@ -732,6 +766,14 @@ export const ProgrammableTransaction: import("@mysten/bcs").BcsStruct<{
             withdraw_from: import("@mysten/bcs").EnumInputShape<{
                 Sender: unknown;
                 Sponsor: unknown;
+                SenderAllowance: {
+                    funder: Iterable<number> & {
+                        length: number;
+                    };
+                    allowance: Iterable<number> & {
+                        length: number;
+                    };
+                };
             }>;
         };
     }>> & {
@@ -1054,6 +1096,14 @@ export const Data: import("@mysten/bcs").BcsEnum<{
         }>, `Map<${string}, ${string}>`>;
     }, string>;
 }, "Data">;
+export const RawPartySerde: import("@mysten/bcs").BcsStruct<{
+    default_permissions: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+    members: import("@mysten/bcs").BcsType<[number[], string][], Iterable<readonly [Iterable<number> & {
+        length: number;
+    }, string | number | bigint]> & {
+        length: number;
+    }, string>;
+}, string>;
 export const Owner: import("@mysten/bcs").BcsEnum<{
     AddressOwner: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
         length: number;
@@ -1069,6 +1119,17 @@ export const Owner: import("@mysten/bcs").BcsEnum<{
         start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
         owner: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
             length: number;
+        }, string>;
+    }, string>;
+    Party: import("@mysten/bcs").BcsStruct<{
+        start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+        permissions: import("@mysten/bcs").BcsStruct<{
+            default_permissions: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            members: import("@mysten/bcs").BcsType<[number[], string][], Iterable<readonly [Iterable<number> & {
+                length: number;
+            }, string | number | bigint]> & {
+                length: number;
+            }, string>;
         }, string>;
     }, string>;
 }, "Owner">;
@@ -1150,6 +1211,17 @@ export const GenesisObject: import("@mysten/bcs").BcsEnum<{
                     length: number;
                 }, string>;
             }, string>;
+            Party: import("@mysten/bcs").BcsStruct<{
+                start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                permissions: import("@mysten/bcs").BcsStruct<{
+                    default_permissions: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                    members: import("@mysten/bcs").BcsType<[number[], string][], Iterable<readonly [Iterable<number> & {
+                        length: number;
+                    }, string | number | bigint]> & {
+                        length: number;
+                    }, string>;
+                }, string>;
+            }, string>;
         }, "Owner">;
     }, string>;
 }, "GenesisObject">;
@@ -1201,7 +1273,14 @@ export const GenesisTransaction: import("@mysten/bcs").BcsStruct<{
                     start_version: string;
                     owner: number[];
                 };
-            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">;
+                Party: {
+                    start_version: string;
+                    permissions: {
+                        default_permissions: string;
+                        members: [number[], string][];
+                    };
+                };
+            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">;
         };
         $kind: "RawObject";
     }[], Iterable<{
@@ -1273,6 +1352,17 @@ export const GenesisTransaction: import("@mysten/bcs").BcsStruct<{
                     start_version: string | number | bigint;
                     owner: Iterable<number> & {
                         length: number;
+                    };
+                };
+                Party: {
+                    start_version: string | number | bigint;
+                    permissions: {
+                        default_permissions: string | number | bigint;
+                        members: Iterable<readonly [Iterable<number> & {
+                            length: number;
+                        }, string | number | bigint]> & {
+                            length: number;
+                        };
                     };
                 };
             }>;
@@ -1440,6 +1530,7 @@ export const EndOfEpochTransactionKind: import("@mysten/bcs").BcsEnum<{
     WriteAccumulatorStorageCost: import("@mysten/bcs").BcsStruct<{
         storage_cost: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
     }, string>;
+    ForwardingAddressRegistryCreate: any;
 }, "EndOfEpochTransactionKind">;
 export const RandomnessRound: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
 export const RandomnessStateUpdate: import("@mysten/bcs").BcsStruct<{
@@ -1571,7 +1662,11 @@ export const TransactionKind: import("@mysten/bcs").BcsEnum<{
                 withdraw_from: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                     Sender: unknown;
                     Sponsor: unknown;
-                }, "Sender" | "Sponsor">;
+                    SenderAllowance: {
+                        funder: number[];
+                        allowance: number[];
+                    };
+                }, "Sender" | "Sponsor" | "SenderAllowance">;
             };
         }, "Pure" | "Object" | "FundsWithdrawal">[], Iterable<import("@mysten/bcs").EnumInputShape<{
             Pure: Iterable<number> & {
@@ -1610,6 +1705,14 @@ export const TransactionKind: import("@mysten/bcs").BcsEnum<{
                 withdraw_from: import("@mysten/bcs").EnumInputShape<{
                     Sender: unknown;
                     Sponsor: unknown;
+                    SenderAllowance: {
+                        funder: Iterable<number> & {
+                            length: number;
+                        };
+                        allowance: Iterable<number> & {
+                            length: number;
+                        };
+                    };
                 }>;
             };
         }>> & {
@@ -1837,7 +1940,14 @@ export const TransactionKind: import("@mysten/bcs").BcsEnum<{
                         start_version: string;
                         owner: number[];
                     };
-                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">;
+                    Party: {
+                        start_version: string;
+                        permissions: {
+                            default_permissions: string;
+                            members: [number[], string][];
+                        };
+                    };
+                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">;
             };
             $kind: "RawObject";
         }[], Iterable<{
@@ -1909,6 +2019,17 @@ export const TransactionKind: import("@mysten/bcs").BcsEnum<{
                         start_version: string | number | bigint;
                         owner: Iterable<number> & {
                             length: number;
+                        };
+                    };
+                    Party: {
+                        start_version: string | number | bigint;
+                        permissions: {
+                            default_permissions: string | number | bigint;
+                            members: Iterable<readonly [Iterable<number> & {
+                                length: number;
+                            }, string | number | bigint]> & {
+                                length: number;
+                            };
                         };
                     };
                 }>;
@@ -2001,7 +2122,8 @@ export const TransactionKind: import("@mysten/bcs").BcsEnum<{
         WriteAccumulatorStorageCost: {
             storage_cost: string;
         };
-    }, "AuthenticatorStateExpire" | "ChangeEpoch" | "WriteAccumulatorStorageCost" | "AuthenticatorStateCreate" | "RandomnessStateCreate" | "DenyListStateCreate" | "BridgeStateCreate" | "BridgeCommitteeInit" | "StoreExecutionTimeObservations" | "AccumulatorRootCreate" | "CoinRegistryCreate" | "DisplayRegistryCreate" | "AddressAliasStateCreate">[], Iterable<import("@mysten/bcs").EnumInputShape<{
+        ForwardingAddressRegistryCreate: unknown;
+    }, "AuthenticatorStateExpire" | "ChangeEpoch" | "WriteAccumulatorStorageCost" | "AuthenticatorStateCreate" | "RandomnessStateCreate" | "DenyListStateCreate" | "BridgeStateCreate" | "BridgeCommitteeInit" | "StoreExecutionTimeObservations" | "AccumulatorRootCreate" | "CoinRegistryCreate" | "DisplayRegistryCreate" | "AddressAliasStateCreate" | "ForwardingAddressRegistryCreate">[], Iterable<import("@mysten/bcs").EnumInputShape<{
         ChangeEpoch: {
             epoch: string | number | bigint;
             protocol_version: string | number | bigint;
@@ -2069,6 +2191,7 @@ export const TransactionKind: import("@mysten/bcs").BcsEnum<{
         WriteAccumulatorStorageCost: {
             storage_cost: string | number | bigint;
         };
+        ForwardingAddressRegistryCreate: unknown;
     }>> & {
         length: number;
     }, string>;
@@ -2177,7 +2300,11 @@ export const TransactionKind: import("@mysten/bcs").BcsEnum<{
                 withdraw_from: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                     Sender: unknown;
                     Sponsor: unknown;
-                }, "Sender" | "Sponsor">;
+                    SenderAllowance: {
+                        funder: number[];
+                        allowance: number[];
+                    };
+                }, "Sender" | "Sponsor" | "SenderAllowance">;
             };
         }, "Pure" | "Object" | "FundsWithdrawal">[], Iterable<import("@mysten/bcs").EnumInputShape<{
             Pure: Iterable<number> & {
@@ -2216,6 +2343,14 @@ export const TransactionKind: import("@mysten/bcs").BcsEnum<{
                 withdraw_from: import("@mysten/bcs").EnumInputShape<{
                     Sender: unknown;
                     Sponsor: unknown;
+                    SenderAllowance: {
+                        funder: Iterable<number> & {
+                            length: number;
+                        };
+                        allowance: Iterable<number> & {
+                            length: number;
+                        };
+                    };
                 }>;
             };
         }>> & {
@@ -2403,6 +2538,25 @@ export const TransactionExpiration: import("@mysten/bcs").BcsEnum<{
         }, "vector<u8>">;
         nonce: import("@mysten/bcs").BcsType<number, number, "u32">;
     }, string>;
+    Validity: import("@mysten/bcs").BcsStruct<{
+        min_epoch: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+        max_epoch: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+        min_timestamp: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+        max_timestamp: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+        chain: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+            length: number;
+        }, "vector<u8>">;
+        nonce: import("@mysten/bcs").BcsType<number, number, "u32">;
+        allowed_proposers: import("@mysten/bcs").BcsType<{
+            epoch: string;
+            proposers: number[];
+        }, {
+            epoch: string | number | bigint;
+            proposers: Iterable<number> & {
+                length: number;
+            };
+        }, `Option<${string}>`>;
+    }, string>;
 }, "TransactionExpiration">;
 export const TransactionDataV1: import("@mysten/bcs").BcsStruct<{
     kind: import("@mysten/bcs").BcsEnum<{
@@ -2434,7 +2588,11 @@ export const TransactionDataV1: import("@mysten/bcs").BcsStruct<{
                     withdraw_from: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                         Sender: unknown;
                         Sponsor: unknown;
-                    }, "Sender" | "Sponsor">;
+                        SenderAllowance: {
+                            funder: number[];
+                            allowance: number[];
+                        };
+                    }, "Sender" | "Sponsor" | "SenderAllowance">;
                 };
             }, "Pure" | "Object" | "FundsWithdrawal">[], Iterable<import("@mysten/bcs").EnumInputShape<{
                 Pure: Iterable<number> & {
@@ -2473,6 +2631,14 @@ export const TransactionDataV1: import("@mysten/bcs").BcsStruct<{
                     withdraw_from: import("@mysten/bcs").EnumInputShape<{
                         Sender: unknown;
                         Sponsor: unknown;
+                        SenderAllowance: {
+                            funder: Iterable<number> & {
+                                length: number;
+                            };
+                            allowance: Iterable<number> & {
+                                length: number;
+                            };
+                        };
                     }>;
                 };
             }>> & {
@@ -2700,7 +2866,14 @@ export const TransactionDataV1: import("@mysten/bcs").BcsStruct<{
                             start_version: string;
                             owner: number[];
                         };
-                    }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">;
+                        Party: {
+                            start_version: string;
+                            permissions: {
+                                default_permissions: string;
+                                members: [number[], string][];
+                            };
+                        };
+                    }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">;
                 };
                 $kind: "RawObject";
             }[], Iterable<{
@@ -2772,6 +2945,17 @@ export const TransactionDataV1: import("@mysten/bcs").BcsStruct<{
                             start_version: string | number | bigint;
                             owner: Iterable<number> & {
                                 length: number;
+                            };
+                        };
+                        Party: {
+                            start_version: string | number | bigint;
+                            permissions: {
+                                default_permissions: string | number | bigint;
+                                members: Iterable<readonly [Iterable<number> & {
+                                    length: number;
+                                }, string | number | bigint]> & {
+                                    length: number;
+                                };
                             };
                         };
                     }>;
@@ -2864,7 +3048,8 @@ export const TransactionDataV1: import("@mysten/bcs").BcsStruct<{
             WriteAccumulatorStorageCost: {
                 storage_cost: string;
             };
-        }, "AuthenticatorStateExpire" | "ChangeEpoch" | "WriteAccumulatorStorageCost" | "AuthenticatorStateCreate" | "RandomnessStateCreate" | "DenyListStateCreate" | "BridgeStateCreate" | "BridgeCommitteeInit" | "StoreExecutionTimeObservations" | "AccumulatorRootCreate" | "CoinRegistryCreate" | "DisplayRegistryCreate" | "AddressAliasStateCreate">[], Iterable<import("@mysten/bcs").EnumInputShape<{
+            ForwardingAddressRegistryCreate: unknown;
+        }, "AuthenticatorStateExpire" | "ChangeEpoch" | "WriteAccumulatorStorageCost" | "AuthenticatorStateCreate" | "RandomnessStateCreate" | "DenyListStateCreate" | "BridgeStateCreate" | "BridgeCommitteeInit" | "StoreExecutionTimeObservations" | "AccumulatorRootCreate" | "CoinRegistryCreate" | "DisplayRegistryCreate" | "AddressAliasStateCreate" | "ForwardingAddressRegistryCreate">[], Iterable<import("@mysten/bcs").EnumInputShape<{
             ChangeEpoch: {
                 epoch: string | number | bigint;
                 protocol_version: string | number | bigint;
@@ -2932,6 +3117,7 @@ export const TransactionDataV1: import("@mysten/bcs").BcsStruct<{
             WriteAccumulatorStorageCost: {
                 storage_cost: string | number | bigint;
             };
+            ForwardingAddressRegistryCreate: unknown;
         }>> & {
             length: number;
         }, string>;
@@ -3040,7 +3226,11 @@ export const TransactionDataV1: import("@mysten/bcs").BcsStruct<{
                     withdraw_from: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                         Sender: unknown;
                         Sponsor: unknown;
-                    }, "Sender" | "Sponsor">;
+                        SenderAllowance: {
+                            funder: number[];
+                            allowance: number[];
+                        };
+                    }, "Sender" | "Sponsor" | "SenderAllowance">;
                 };
             }, "Pure" | "Object" | "FundsWithdrawal">[], Iterable<import("@mysten/bcs").EnumInputShape<{
                 Pure: Iterable<number> & {
@@ -3079,6 +3269,14 @@ export const TransactionDataV1: import("@mysten/bcs").BcsStruct<{
                     withdraw_from: import("@mysten/bcs").EnumInputShape<{
                         Sender: unknown;
                         Sponsor: unknown;
+                        SenderAllowance: {
+                            funder: Iterable<number> & {
+                                length: number;
+                            };
+                            allowance: Iterable<number> & {
+                                length: number;
+                            };
+                        };
                     }>;
                 };
             }>> & {
@@ -3269,6 +3467,25 @@ export const TransactionDataV1: import("@mysten/bcs").BcsStruct<{
             }, "vector<u8>">;
             nonce: import("@mysten/bcs").BcsType<number, number, "u32">;
         }, string>;
+        Validity: import("@mysten/bcs").BcsStruct<{
+            min_epoch: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+            max_epoch: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+            min_timestamp: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+            max_timestamp: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+            chain: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+                length: number;
+            }, "vector<u8>">;
+            nonce: import("@mysten/bcs").BcsType<number, number, "u32">;
+            allowed_proposers: import("@mysten/bcs").BcsType<{
+                epoch: string;
+                proposers: number[];
+            }, {
+                epoch: string | number | bigint;
+                proposers: Iterable<number> & {
+                    length: number;
+                };
+            }, `Option<${string}>`>;
+        }, string>;
     }, "TransactionExpiration">;
 }, string>;
 export const TransactionData: import("@mysten/bcs").BcsEnum<{
@@ -3302,7 +3519,11 @@ export const TransactionData: import("@mysten/bcs").BcsEnum<{
                         withdraw_from: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                             Sender: unknown;
                             Sponsor: unknown;
-                        }, "Sender" | "Sponsor">;
+                            SenderAllowance: {
+                                funder: number[];
+                                allowance: number[];
+                            };
+                        }, "Sender" | "Sponsor" | "SenderAllowance">;
                     };
                 }, "Pure" | "Object" | "FundsWithdrawal">[], Iterable<import("@mysten/bcs").EnumInputShape<{
                     Pure: Iterable<number> & {
@@ -3341,6 +3562,14 @@ export const TransactionData: import("@mysten/bcs").BcsEnum<{
                         withdraw_from: import("@mysten/bcs").EnumInputShape<{
                             Sender: unknown;
                             Sponsor: unknown;
+                            SenderAllowance: {
+                                funder: Iterable<number> & {
+                                    length: number;
+                                };
+                                allowance: Iterable<number> & {
+                                    length: number;
+                                };
+                            };
                         }>;
                     };
                 }>> & {
@@ -3568,7 +3797,14 @@ export const TransactionData: import("@mysten/bcs").BcsEnum<{
                                 start_version: string;
                                 owner: number[];
                             };
-                        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">;
+                            Party: {
+                                start_version: string;
+                                permissions: {
+                                    default_permissions: string;
+                                    members: [number[], string][];
+                                };
+                            };
+                        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">;
                     };
                     $kind: "RawObject";
                 }[], Iterable<{
@@ -3640,6 +3876,17 @@ export const TransactionData: import("@mysten/bcs").BcsEnum<{
                                 start_version: string | number | bigint;
                                 owner: Iterable<number> & {
                                     length: number;
+                                };
+                            };
+                            Party: {
+                                start_version: string | number | bigint;
+                                permissions: {
+                                    default_permissions: string | number | bigint;
+                                    members: Iterable<readonly [Iterable<number> & {
+                                        length: number;
+                                    }, string | number | bigint]> & {
+                                        length: number;
+                                    };
                                 };
                             };
                         }>;
@@ -3732,7 +3979,8 @@ export const TransactionData: import("@mysten/bcs").BcsEnum<{
                 WriteAccumulatorStorageCost: {
                     storage_cost: string;
                 };
-            }, "AuthenticatorStateExpire" | "ChangeEpoch" | "WriteAccumulatorStorageCost" | "AuthenticatorStateCreate" | "RandomnessStateCreate" | "DenyListStateCreate" | "BridgeStateCreate" | "BridgeCommitteeInit" | "StoreExecutionTimeObservations" | "AccumulatorRootCreate" | "CoinRegistryCreate" | "DisplayRegistryCreate" | "AddressAliasStateCreate">[], Iterable<import("@mysten/bcs").EnumInputShape<{
+                ForwardingAddressRegistryCreate: unknown;
+            }, "AuthenticatorStateExpire" | "ChangeEpoch" | "WriteAccumulatorStorageCost" | "AuthenticatorStateCreate" | "RandomnessStateCreate" | "DenyListStateCreate" | "BridgeStateCreate" | "BridgeCommitteeInit" | "StoreExecutionTimeObservations" | "AccumulatorRootCreate" | "CoinRegistryCreate" | "DisplayRegistryCreate" | "AddressAliasStateCreate" | "ForwardingAddressRegistryCreate">[], Iterable<import("@mysten/bcs").EnumInputShape<{
                 ChangeEpoch: {
                     epoch: string | number | bigint;
                     protocol_version: string | number | bigint;
@@ -3800,6 +4048,7 @@ export const TransactionData: import("@mysten/bcs").BcsEnum<{
                 WriteAccumulatorStorageCost: {
                     storage_cost: string | number | bigint;
                 };
+                ForwardingAddressRegistryCreate: unknown;
             }>> & {
                 length: number;
             }, string>;
@@ -3908,7 +4157,11 @@ export const TransactionData: import("@mysten/bcs").BcsEnum<{
                         withdraw_from: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                             Sender: unknown;
                             Sponsor: unknown;
-                        }, "Sender" | "Sponsor">;
+                            SenderAllowance: {
+                                funder: number[];
+                                allowance: number[];
+                            };
+                        }, "Sender" | "Sponsor" | "SenderAllowance">;
                     };
                 }, "Pure" | "Object" | "FundsWithdrawal">[], Iterable<import("@mysten/bcs").EnumInputShape<{
                     Pure: Iterable<number> & {
@@ -3947,6 +4200,14 @@ export const TransactionData: import("@mysten/bcs").BcsEnum<{
                         withdraw_from: import("@mysten/bcs").EnumInputShape<{
                             Sender: unknown;
                             Sponsor: unknown;
+                            SenderAllowance: {
+                                funder: Iterable<number> & {
+                                    length: number;
+                                };
+                                allowance: Iterable<number> & {
+                                    length: number;
+                                };
+                            };
                         }>;
                     };
                 }>> & {
@@ -4137,6 +4398,25 @@ export const TransactionData: import("@mysten/bcs").BcsEnum<{
                 }, "vector<u8>">;
                 nonce: import("@mysten/bcs").BcsType<number, number, "u32">;
             }, string>;
+            Validity: import("@mysten/bcs").BcsStruct<{
+                min_epoch: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+                max_epoch: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+                min_timestamp: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+                max_timestamp: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+                chain: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+                    length: number;
+                }, "vector<u8>">;
+                nonce: import("@mysten/bcs").BcsType<number, number, "u32">;
+                allowed_proposers: import("@mysten/bcs").BcsType<{
+                    epoch: string;
+                    proposers: number[];
+                }, {
+                    epoch: string | number | bigint;
+                    proposers: Iterable<number> & {
+                        length: number;
+                    };
+                }, `Option<${string}>`>;
+            }, string>;
         }, "TransactionExpiration">;
     }, string>;
 }, "TransactionData">;
@@ -4177,7 +4457,11 @@ export const IntentMessage: import("@mysten/bcs").BcsStruct<{
                             withdraw_from: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                                 Sender: unknown;
                                 Sponsor: unknown;
-                            }, "Sender" | "Sponsor">;
+                                SenderAllowance: {
+                                    funder: number[];
+                                    allowance: number[];
+                                };
+                            }, "Sender" | "Sponsor" | "SenderAllowance">;
                         };
                     }, "Pure" | "Object" | "FundsWithdrawal">[], Iterable<import("@mysten/bcs").EnumInputShape<{
                         Pure: Iterable<number> & {
@@ -4216,6 +4500,14 @@ export const IntentMessage: import("@mysten/bcs").BcsStruct<{
                             withdraw_from: import("@mysten/bcs").EnumInputShape<{
                                 Sender: unknown;
                                 Sponsor: unknown;
+                                SenderAllowance: {
+                                    funder: Iterable<number> & {
+                                        length: number;
+                                    };
+                                    allowance: Iterable<number> & {
+                                        length: number;
+                                    };
+                                };
                             }>;
                         };
                     }>> & {
@@ -4443,7 +4735,14 @@ export const IntentMessage: import("@mysten/bcs").BcsStruct<{
                                     start_version: string;
                                     owner: number[];
                                 };
-                            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">;
+                                Party: {
+                                    start_version: string;
+                                    permissions: {
+                                        default_permissions: string;
+                                        members: [number[], string][];
+                                    };
+                                };
+                            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">;
                         };
                         $kind: "RawObject";
                     }[], Iterable<{
@@ -4515,6 +4814,17 @@ export const IntentMessage: import("@mysten/bcs").BcsStruct<{
                                     start_version: string | number | bigint;
                                     owner: Iterable<number> & {
                                         length: number;
+                                    };
+                                };
+                                Party: {
+                                    start_version: string | number | bigint;
+                                    permissions: {
+                                        default_permissions: string | number | bigint;
+                                        members: Iterable<readonly [Iterable<number> & {
+                                            length: number;
+                                        }, string | number | bigint]> & {
+                                            length: number;
+                                        };
                                     };
                                 };
                             }>;
@@ -4607,7 +4917,8 @@ export const IntentMessage: import("@mysten/bcs").BcsStruct<{
                     WriteAccumulatorStorageCost: {
                         storage_cost: string;
                     };
-                }, "AuthenticatorStateExpire" | "ChangeEpoch" | "WriteAccumulatorStorageCost" | "AuthenticatorStateCreate" | "RandomnessStateCreate" | "DenyListStateCreate" | "BridgeStateCreate" | "BridgeCommitteeInit" | "StoreExecutionTimeObservations" | "AccumulatorRootCreate" | "CoinRegistryCreate" | "DisplayRegistryCreate" | "AddressAliasStateCreate">[], Iterable<import("@mysten/bcs").EnumInputShape<{
+                    ForwardingAddressRegistryCreate: unknown;
+                }, "AuthenticatorStateExpire" | "ChangeEpoch" | "WriteAccumulatorStorageCost" | "AuthenticatorStateCreate" | "RandomnessStateCreate" | "DenyListStateCreate" | "BridgeStateCreate" | "BridgeCommitteeInit" | "StoreExecutionTimeObservations" | "AccumulatorRootCreate" | "CoinRegistryCreate" | "DisplayRegistryCreate" | "AddressAliasStateCreate" | "ForwardingAddressRegistryCreate">[], Iterable<import("@mysten/bcs").EnumInputShape<{
                     ChangeEpoch: {
                         epoch: string | number | bigint;
                         protocol_version: string | number | bigint;
@@ -4675,6 +4986,7 @@ export const IntentMessage: import("@mysten/bcs").BcsStruct<{
                     WriteAccumulatorStorageCost: {
                         storage_cost: string | number | bigint;
                     };
+                    ForwardingAddressRegistryCreate: unknown;
                 }>> & {
                     length: number;
                 }, string>;
@@ -4783,7 +5095,11 @@ export const IntentMessage: import("@mysten/bcs").BcsStruct<{
                             withdraw_from: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                                 Sender: unknown;
                                 Sponsor: unknown;
-                            }, "Sender" | "Sponsor">;
+                                SenderAllowance: {
+                                    funder: number[];
+                                    allowance: number[];
+                                };
+                            }, "Sender" | "Sponsor" | "SenderAllowance">;
                         };
                     }, "Pure" | "Object" | "FundsWithdrawal">[], Iterable<import("@mysten/bcs").EnumInputShape<{
                         Pure: Iterable<number> & {
@@ -4822,6 +5138,14 @@ export const IntentMessage: import("@mysten/bcs").BcsStruct<{
                             withdraw_from: import("@mysten/bcs").EnumInputShape<{
                                 Sender: unknown;
                                 Sponsor: unknown;
+                                SenderAllowance: {
+                                    funder: Iterable<number> & {
+                                        length: number;
+                                    };
+                                    allowance: Iterable<number> & {
+                                        length: number;
+                                    };
+                                };
                             }>;
                         };
                     }>> & {
@@ -5012,6 +5336,25 @@ export const IntentMessage: import("@mysten/bcs").BcsStruct<{
                     }, "vector<u8>">;
                     nonce: import("@mysten/bcs").BcsType<number, number, "u32">;
                 }, string>;
+                Validity: import("@mysten/bcs").BcsStruct<{
+                    min_epoch: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+                    max_epoch: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+                    min_timestamp: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+                    max_timestamp: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+                    chain: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+                        length: number;
+                    }, "vector<u8>">;
+                    nonce: import("@mysten/bcs").BcsType<number, number, "u32">;
+                    allowed_proposers: import("@mysten/bcs").BcsType<{
+                        epoch: string;
+                        proposers: number[];
+                    }, {
+                        epoch: string | number | bigint;
+                        proposers: Iterable<number> & {
+                            length: number;
+                        };
+                    }, `Option<${string}>`>;
+                }, string>;
             }, "TransactionExpiration">;
         }, string>;
     }, "TransactionData">;
@@ -5054,7 +5397,11 @@ export const SenderSignedTransaction: import("@mysten/bcs").BcsStruct<{
                                 withdraw_from: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                                     Sender: unknown;
                                     Sponsor: unknown;
-                                }, "Sender" | "Sponsor">;
+                                    SenderAllowance: {
+                                        funder: number[];
+                                        allowance: number[];
+                                    };
+                                }, "Sender" | "Sponsor" | "SenderAllowance">;
                             };
                         }, "Pure" | "Object" | "FundsWithdrawal">[], Iterable<import("@mysten/bcs").EnumInputShape<{
                             Pure: Iterable<number> & {
@@ -5093,6 +5440,14 @@ export const SenderSignedTransaction: import("@mysten/bcs").BcsStruct<{
                                 withdraw_from: import("@mysten/bcs").EnumInputShape<{
                                     Sender: unknown;
                                     Sponsor: unknown;
+                                    SenderAllowance: {
+                                        funder: Iterable<number> & {
+                                            length: number;
+                                        };
+                                        allowance: Iterable<number> & {
+                                            length: number;
+                                        };
+                                    };
                                 }>;
                             };
                         }>> & {
@@ -5320,7 +5675,14 @@ export const SenderSignedTransaction: import("@mysten/bcs").BcsStruct<{
                                         start_version: string;
                                         owner: number[];
                                     };
-                                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">;
+                                    Party: {
+                                        start_version: string;
+                                        permissions: {
+                                            default_permissions: string;
+                                            members: [number[], string][];
+                                        };
+                                    };
+                                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">;
                             };
                             $kind: "RawObject";
                         }[], Iterable<{
@@ -5392,6 +5754,17 @@ export const SenderSignedTransaction: import("@mysten/bcs").BcsStruct<{
                                         start_version: string | number | bigint;
                                         owner: Iterable<number> & {
                                             length: number;
+                                        };
+                                    };
+                                    Party: {
+                                        start_version: string | number | bigint;
+                                        permissions: {
+                                            default_permissions: string | number | bigint;
+                                            members: Iterable<readonly [Iterable<number> & {
+                                                length: number;
+                                            }, string | number | bigint]> & {
+                                                length: number;
+                                            };
                                         };
                                     };
                                 }>;
@@ -5484,7 +5857,8 @@ export const SenderSignedTransaction: import("@mysten/bcs").BcsStruct<{
                         WriteAccumulatorStorageCost: {
                             storage_cost: string;
                         };
-                    }, "AuthenticatorStateExpire" | "ChangeEpoch" | "WriteAccumulatorStorageCost" | "AuthenticatorStateCreate" | "RandomnessStateCreate" | "DenyListStateCreate" | "BridgeStateCreate" | "BridgeCommitteeInit" | "StoreExecutionTimeObservations" | "AccumulatorRootCreate" | "CoinRegistryCreate" | "DisplayRegistryCreate" | "AddressAliasStateCreate">[], Iterable<import("@mysten/bcs").EnumInputShape<{
+                        ForwardingAddressRegistryCreate: unknown;
+                    }, "AuthenticatorStateExpire" | "ChangeEpoch" | "WriteAccumulatorStorageCost" | "AuthenticatorStateCreate" | "RandomnessStateCreate" | "DenyListStateCreate" | "BridgeStateCreate" | "BridgeCommitteeInit" | "StoreExecutionTimeObservations" | "AccumulatorRootCreate" | "CoinRegistryCreate" | "DisplayRegistryCreate" | "AddressAliasStateCreate" | "ForwardingAddressRegistryCreate">[], Iterable<import("@mysten/bcs").EnumInputShape<{
                         ChangeEpoch: {
                             epoch: string | number | bigint;
                             protocol_version: string | number | bigint;
@@ -5552,6 +5926,7 @@ export const SenderSignedTransaction: import("@mysten/bcs").BcsStruct<{
                         WriteAccumulatorStorageCost: {
                             storage_cost: string | number | bigint;
                         };
+                        ForwardingAddressRegistryCreate: unknown;
                     }>> & {
                         length: number;
                     }, string>;
@@ -5660,7 +6035,11 @@ export const SenderSignedTransaction: import("@mysten/bcs").BcsStruct<{
                                 withdraw_from: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                                     Sender: unknown;
                                     Sponsor: unknown;
-                                }, "Sender" | "Sponsor">;
+                                    SenderAllowance: {
+                                        funder: number[];
+                                        allowance: number[];
+                                    };
+                                }, "Sender" | "Sponsor" | "SenderAllowance">;
                             };
                         }, "Pure" | "Object" | "FundsWithdrawal">[], Iterable<import("@mysten/bcs").EnumInputShape<{
                             Pure: Iterable<number> & {
@@ -5699,6 +6078,14 @@ export const SenderSignedTransaction: import("@mysten/bcs").BcsStruct<{
                                 withdraw_from: import("@mysten/bcs").EnumInputShape<{
                                     Sender: unknown;
                                     Sponsor: unknown;
+                                    SenderAllowance: {
+                                        funder: Iterable<number> & {
+                                            length: number;
+                                        };
+                                        allowance: Iterable<number> & {
+                                            length: number;
+                                        };
+                                    };
                                 }>;
                             };
                         }>> & {
@@ -5889,6 +6276,25 @@ export const SenderSignedTransaction: import("@mysten/bcs").BcsStruct<{
                         }, "vector<u8>">;
                         nonce: import("@mysten/bcs").BcsType<number, number, "u32">;
                     }, string>;
+                    Validity: import("@mysten/bcs").BcsStruct<{
+                        min_epoch: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+                        max_epoch: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+                        min_timestamp: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+                        max_timestamp: import("@mysten/bcs").BcsType<string, string | number | bigint, "Option<u64>">;
+                        chain: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
+                            length: number;
+                        }, "vector<u8>">;
+                        nonce: import("@mysten/bcs").BcsType<number, number, "u32">;
+                        allowed_proposers: import("@mysten/bcs").BcsType<{
+                            epoch: string;
+                            proposers: number[];
+                        }, {
+                            epoch: string | number | bigint;
+                            proposers: Iterable<number> & {
+                                length: number;
+                            };
+                        }, `Option<${string}>`>;
+                    }, string>;
                 }, "TransactionExpiration">;
             }, string>;
         }, "TransactionData">;
@@ -5937,7 +6343,11 @@ export const SenderSignedData: import("@mysten/bcs").BcsType<{
                                 withdraw_from: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                                     Sender: unknown;
                                     Sponsor: unknown;
-                                }, "Sender" | "Sponsor">;
+                                    SenderAllowance: {
+                                        funder: number[];
+                                        allowance: number[];
+                                    };
+                                }, "Sender" | "Sponsor" | "SenderAllowance">;
                             };
                         }, "Pure" | "Object" | "FundsWithdrawal">[];
                         commands: import("@mysten/bcs").EnumOutputShapeWithKeys<{
@@ -6059,7 +6469,14 @@ export const SenderSignedData: import("@mysten/bcs").BcsType<{
                                         start_version: string;
                                         owner: number[];
                                     };
-                                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">;
+                                    Party: {
+                                        start_version: string;
+                                        permissions: {
+                                            default_permissions: string;
+                                            members: [number[], string][];
+                                        };
+                                    };
+                                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">;
                             };
                             $kind: "RawObject";
                         }[];
@@ -6134,7 +6551,8 @@ export const SenderSignedData: import("@mysten/bcs").BcsType<{
                         WriteAccumulatorStorageCost: {
                             storage_cost: string;
                         };
-                    }, "AuthenticatorStateExpire" | "ChangeEpoch" | "WriteAccumulatorStorageCost" | "AuthenticatorStateCreate" | "RandomnessStateCreate" | "DenyListStateCreate" | "BridgeStateCreate" | "BridgeCommitteeInit" | "StoreExecutionTimeObservations" | "AccumulatorRootCreate" | "CoinRegistryCreate" | "DisplayRegistryCreate" | "AddressAliasStateCreate">[];
+                        ForwardingAddressRegistryCreate: unknown;
+                    }, "AuthenticatorStateExpire" | "ChangeEpoch" | "WriteAccumulatorStorageCost" | "AuthenticatorStateCreate" | "RandomnessStateCreate" | "DenyListStateCreate" | "BridgeStateCreate" | "BridgeCommitteeInit" | "StoreExecutionTimeObservations" | "AccumulatorRootCreate" | "CoinRegistryCreate" | "DisplayRegistryCreate" | "AddressAliasStateCreate" | "ForwardingAddressRegistryCreate">[];
                     RandomnessStateUpdate: {
                         epoch: string;
                         randomness_round: string;
@@ -6198,7 +6616,11 @@ export const SenderSignedData: import("@mysten/bcs").BcsType<{
                                 withdraw_from: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                                     Sender: unknown;
                                     Sponsor: unknown;
-                                }, "Sender" | "Sponsor">;
+                                    SenderAllowance: {
+                                        funder: number[];
+                                        allowance: number[];
+                                    };
+                                }, "Sender" | "Sponsor" | "SenderAllowance">;
                             };
                         }, "Pure" | "Object" | "FundsWithdrawal">[];
                         commands: import("@mysten/bcs").EnumOutputShapeWithKeys<{
@@ -6281,7 +6703,19 @@ export const SenderSignedData: import("@mysten/bcs").BcsType<{
                         chain: number[];
                         nonce: number;
                     };
-                }, "None" | "Epoch" | "ValidDuring">;
+                    Validity: {
+                        min_epoch: string;
+                        max_epoch: string;
+                        min_timestamp: string;
+                        max_timestamp: string;
+                        chain: number[];
+                        nonce: number;
+                        allowed_proposers: {
+                            epoch: string;
+                            proposers: number[];
+                        };
+                    };
+                }, "None" | "Epoch" | "ValidDuring" | "Validity">;
             };
             $kind: "V1";
         };
@@ -6335,6 +6769,14 @@ export const SenderSignedData: import("@mysten/bcs").BcsType<{
                                 withdraw_from: import("@mysten/bcs").EnumInputShape<{
                                     Sender: unknown;
                                     Sponsor: unknown;
+                                    SenderAllowance: {
+                                        funder: Iterable<number> & {
+                                            length: number;
+                                        };
+                                        allowance: Iterable<number> & {
+                                            length: number;
+                                        };
+                                    };
                                 }>;
                             };
                         }>> & {
@@ -6527,6 +6969,17 @@ export const SenderSignedData: import("@mysten/bcs").BcsType<{
                                             length: number;
                                         };
                                     };
+                                    Party: {
+                                        start_version: string | number | bigint;
+                                        permissions: {
+                                            default_permissions: string | number | bigint;
+                                            members: Iterable<readonly [Iterable<number> & {
+                                                length: number;
+                                            }, string | number | bigint]> & {
+                                                length: number;
+                                            };
+                                        };
+                                    };
                                 }>;
                             };
                         }> & {
@@ -6626,6 +7079,7 @@ export const SenderSignedData: import("@mysten/bcs").BcsType<{
                         WriteAccumulatorStorageCost: {
                             storage_cost: string | number | bigint;
                         };
+                        ForwardingAddressRegistryCreate: unknown;
                     }>> & {
                         length: number;
                     };
@@ -6744,6 +7198,14 @@ export const SenderSignedData: import("@mysten/bcs").BcsType<{
                                 withdraw_from: import("@mysten/bcs").EnumInputShape<{
                                     Sender: unknown;
                                     Sponsor: unknown;
+                                    SenderAllowance: {
+                                        funder: Iterable<number> & {
+                                            length: number;
+                                        };
+                                        allowance: Iterable<number> & {
+                                            length: number;
+                                        };
+                                    };
                                 }>;
                             };
                         }>> & {
@@ -6875,6 +7337,22 @@ export const SenderSignedData: import("@mysten/bcs").BcsType<{
                         };
                         nonce: number;
                     };
+                    Validity: {
+                        min_epoch: string | number | bigint;
+                        max_epoch: string | number | bigint;
+                        min_timestamp: string | number | bigint;
+                        max_timestamp: string | number | bigint;
+                        chain: Iterable<number> & {
+                            length: number;
+                        };
+                        nonce: number;
+                        allowed_proposers: {
+                            epoch: string | number | bigint;
+                            proposers: Iterable<number> & {
+                                length: number;
+                            };
+                        };
+                    };
                 }>;
             };
         };
@@ -6951,6 +7429,7 @@ export const CommandArgumentError: import("@mysten/bcs").BcsEnum<{
     CannotMoveBorrowedValue: any;
     CannotWriteToExtendedReference: any;
     InvalidReferenceArgument: any;
+    InvalidTxContext: any;
 }, "CommandArgumentError">;
 export const TypeArgumentError: import("@mysten/bcs").BcsEnum<{
     TypeNotFound: any;
@@ -7077,6 +7556,7 @@ export const ExecutionErrorKind: import("@mysten/bcs").BcsEnum<{
             CannotMoveBorrowedValue: any;
             CannotWriteToExtendedReference: any;
             InvalidReferenceArgument: any;
+            InvalidTxContext: any;
         }, "CommandArgumentError">;
     }, string>;
     TypeArgumentError: import("@mysten/bcs").BcsStruct<{
@@ -7260,6 +7740,7 @@ export const ExecutionFailure: import("@mysten/bcs").BcsStruct<{
                 CannotMoveBorrowedValue: any;
                 CannotWriteToExtendedReference: any;
                 InvalidReferenceArgument: any;
+                InvalidTxContext: any;
             }, "CommandArgumentError">;
         }, string>;
         TypeArgumentError: import("@mysten/bcs").BcsStruct<{
@@ -7447,6 +7928,7 @@ export const ExecutionStatus: import("@mysten/bcs").BcsEnum<{
                     CannotMoveBorrowedValue: any;
                     CannotWriteToExtendedReference: any;
                     InvalidReferenceArgument: any;
+                    InvalidTxContext: any;
                 }, "CommandArgumentError">;
             }, string>;
             TypeArgumentError: import("@mysten/bcs").BcsStruct<{
@@ -7639,6 +8121,7 @@ export const TransactionEffectsV1: import("@mysten/bcs").BcsStruct<{
                         CannotMoveBorrowedValue: any;
                         CannotWriteToExtendedReference: any;
                         InvalidReferenceArgument: any;
+                        InvalidTxContext: any;
                     }, "CommandArgumentError">;
                 }, string>;
                 TypeArgumentError: import("@mysten/bcs").BcsStruct<{
@@ -7770,7 +8253,14 @@ export const TransactionEffectsV1: import("@mysten/bcs").BcsStruct<{
             start_version: string;
             owner: number[];
         };
-    }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][], Iterable<readonly [readonly [Iterable<number> & {
+        Party: {
+            start_version: string;
+            permissions: {
+                default_permissions: string;
+                members: [number[], string][];
+            };
+        };
+    }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][], Iterable<readonly [readonly [Iterable<number> & {
         length: number;
     }, string | number | bigint, Iterable<number> & {
         length: number;
@@ -7789,6 +8279,17 @@ export const TransactionEffectsV1: import("@mysten/bcs").BcsStruct<{
             start_version: string | number | bigint;
             owner: Iterable<number> & {
                 length: number;
+            };
+        };
+        Party: {
+            start_version: string | number | bigint;
+            permissions: {
+                default_permissions: string | number | bigint;
+                members: Iterable<readonly [Iterable<number> & {
+                    length: number;
+                }, string | number | bigint]> & {
+                    length: number;
+                };
             };
         };
     }>]> & {
@@ -7805,7 +8306,14 @@ export const TransactionEffectsV1: import("@mysten/bcs").BcsStruct<{
             start_version: string;
             owner: number[];
         };
-    }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][], Iterable<readonly [readonly [Iterable<number> & {
+        Party: {
+            start_version: string;
+            permissions: {
+                default_permissions: string;
+                members: [number[], string][];
+            };
+        };
+    }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][], Iterable<readonly [readonly [Iterable<number> & {
         length: number;
     }, string | number | bigint, Iterable<number> & {
         length: number;
@@ -7826,6 +8334,17 @@ export const TransactionEffectsV1: import("@mysten/bcs").BcsStruct<{
                 length: number;
             };
         };
+        Party: {
+            start_version: string | number | bigint;
+            permissions: {
+                default_permissions: string | number | bigint;
+                members: Iterable<readonly [Iterable<number> & {
+                    length: number;
+                }, string | number | bigint]> & {
+                    length: number;
+                };
+            };
+        };
     }>]> & {
         length: number;
     }, string>;
@@ -7840,7 +8359,14 @@ export const TransactionEffectsV1: import("@mysten/bcs").BcsStruct<{
             start_version: string;
             owner: number[];
         };
-    }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][], Iterable<readonly [readonly [Iterable<number> & {
+        Party: {
+            start_version: string;
+            permissions: {
+                default_permissions: string;
+                members: [number[], string][];
+            };
+        };
+    }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][], Iterable<readonly [readonly [Iterable<number> & {
         length: number;
     }, string | number | bigint, Iterable<number> & {
         length: number;
@@ -7859,6 +8385,17 @@ export const TransactionEffectsV1: import("@mysten/bcs").BcsStruct<{
             start_version: string | number | bigint;
             owner: Iterable<number> & {
                 length: number;
+            };
+        };
+        Party: {
+            start_version: string | number | bigint;
+            permissions: {
+                default_permissions: string | number | bigint;
+                members: Iterable<readonly [Iterable<number> & {
+                    length: number;
+                }, string | number | bigint]> & {
+                    length: number;
+                };
             };
         };
     }>]> & {
@@ -7906,6 +8443,17 @@ export const TransactionEffectsV1: import("@mysten/bcs").BcsStruct<{
                 length: number;
             }, string>;
         }, string>;
+        Party: import("@mysten/bcs").BcsStruct<{
+            start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            permissions: import("@mysten/bcs").BcsStruct<{
+                default_permissions: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                members: import("@mysten/bcs").BcsType<[number[], string][], Iterable<readonly [Iterable<number> & {
+                    length: number;
+                }, string | number | bigint]> & {
+                    length: number;
+                }, string>;
+            }, string>;
+        }, string>;
     }, "Owner">], string>;
     events_digest: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
         length: number;
@@ -7937,6 +8485,17 @@ export const ObjectIn: import("@mysten/bcs").BcsEnum<{
                 length: number;
             }, string>;
         }, string>;
+        Party: import("@mysten/bcs").BcsStruct<{
+            start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            permissions: import("@mysten/bcs").BcsStruct<{
+                default_permissions: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                members: import("@mysten/bcs").BcsType<[number[], string][], Iterable<readonly [Iterable<number> & {
+                    length: number;
+                }, string | number | bigint]> & {
+                    length: number;
+                }, string>;
+            }, string>;
+        }, string>;
     }, "Owner">], string>;
 }, "ObjectIn">;
 export const ObjectOut: import("@mysten/bcs").BcsEnum<{
@@ -7958,6 +8517,17 @@ export const ObjectOut: import("@mysten/bcs").BcsEnum<{
             start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
             owner: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                 length: number;
+            }, string>;
+        }, string>;
+        Party: import("@mysten/bcs").BcsStruct<{
+            start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            permissions: import("@mysten/bcs").BcsStruct<{
+                default_permissions: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                members: import("@mysten/bcs").BcsType<[number[], string][], Iterable<readonly [Iterable<number> & {
+                    length: number;
+                }, string | number | bigint]> & {
+                    length: number;
+                }, string>;
             }, string>;
         }, string>;
     }, "Owner">], string>;
@@ -8013,6 +8583,17 @@ export const EffectsObjectChange: import("@mysten/bcs").BcsStruct<{
                     length: number;
                 }, string>;
             }, string>;
+            Party: import("@mysten/bcs").BcsStruct<{
+                start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                permissions: import("@mysten/bcs").BcsStruct<{
+                    default_permissions: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                    members: import("@mysten/bcs").BcsType<[number[], string][], Iterable<readonly [Iterable<number> & {
+                        length: number;
+                    }, string | number | bigint]> & {
+                        length: number;
+                    }, string>;
+                }, string>;
+            }, string>;
         }, "Owner">], string>;
     }, "ObjectIn">;
     output_state: import("@mysten/bcs").BcsEnum<{
@@ -8034,6 +8615,17 @@ export const EffectsObjectChange: import("@mysten/bcs").BcsStruct<{
                 start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
                 owner: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
+                }, string>;
+            }, string>;
+            Party: import("@mysten/bcs").BcsStruct<{
+                start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                permissions: import("@mysten/bcs").BcsStruct<{
+                    default_permissions: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                    members: import("@mysten/bcs").BcsType<[number[], string][], Iterable<readonly [Iterable<number> & {
+                        length: number;
+                    }, string | number | bigint]> & {
+                        length: number;
+                    }, string>;
                 }, string>;
             }, string>;
         }, "Owner">], string>;
@@ -8171,6 +8763,7 @@ export const TransactionEffectsV2: import("@mysten/bcs").BcsStruct<{
                         CannotMoveBorrowedValue: any;
                         CannotWriteToExtendedReference: any;
                         InvalidReferenceArgument: any;
+                        InvalidTxContext: any;
                     }, "CommandArgumentError">;
                 }, string>;
                 TypeArgumentError: import("@mysten/bcs").BcsStruct<{
@@ -8303,7 +8896,14 @@ export const TransactionEffectsV2: import("@mysten/bcs").BcsStruct<{
                     start_version: string;
                     owner: number[];
                 };
-            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">];
+                Party: {
+                    start_version: string;
+                    permissions: {
+                        default_permissions: string;
+                        members: [number[], string][];
+                    };
+                };
+            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">];
         }, "NotExist" | "Exist">;
         output_state: import("@mysten/bcs").EnumOutputShapeWithKeys<{
             NotExist: unknown;
@@ -8318,7 +8918,14 @@ export const TransactionEffectsV2: import("@mysten/bcs").BcsStruct<{
                     start_version: string;
                     owner: number[];
                 };
-            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">];
+                Party: {
+                    start_version: string;
+                    permissions: {
+                        default_permissions: string;
+                        members: [number[], string][];
+                    };
+                };
+            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">];
             PackageWrite: [string, number[]];
             AccumulatorWriteV1: {
                 address: {
@@ -8365,6 +8972,17 @@ export const TransactionEffectsV2: import("@mysten/bcs").BcsStruct<{
                         length: number;
                     };
                 };
+                Party: {
+                    start_version: string | number | bigint;
+                    permissions: {
+                        default_permissions: string | number | bigint;
+                        members: Iterable<readonly [Iterable<number> & {
+                            length: number;
+                        }, string | number | bigint]> & {
+                            length: number;
+                        };
+                    };
+                };
             }>];
         }>;
         output_state: import("@mysten/bcs").EnumInputShape<{
@@ -8386,6 +9004,17 @@ export const TransactionEffectsV2: import("@mysten/bcs").BcsStruct<{
                     start_version: string | number | bigint;
                     owner: Iterable<number> & {
                         length: number;
+                    };
+                };
+                Party: {
+                    start_version: string | number | bigint;
+                    permissions: {
+                        default_permissions: string | number | bigint;
+                        members: Iterable<readonly [Iterable<number> & {
+                            length: number;
+                        }, string | number | bigint]> & {
+                            length: number;
+                        };
                     };
                 };
             }>];
@@ -8537,6 +9166,7 @@ export const TransactionEffects: import("@mysten/bcs").BcsEnum<{
                             CannotMoveBorrowedValue: any;
                             CannotWriteToExtendedReference: any;
                             InvalidReferenceArgument: any;
+                            InvalidTxContext: any;
                         }, "CommandArgumentError">;
                     }, string>;
                     TypeArgumentError: import("@mysten/bcs").BcsStruct<{
@@ -8668,7 +9298,14 @@ export const TransactionEffects: import("@mysten/bcs").BcsEnum<{
                 start_version: string;
                 owner: number[];
             };
-        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][], Iterable<readonly [readonly [Iterable<number> & {
+            Party: {
+                start_version: string;
+                permissions: {
+                    default_permissions: string;
+                    members: [number[], string][];
+                };
+            };
+        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][], Iterable<readonly [readonly [Iterable<number> & {
             length: number;
         }, string | number | bigint, Iterable<number> & {
             length: number;
@@ -8687,6 +9324,17 @@ export const TransactionEffects: import("@mysten/bcs").BcsEnum<{
                 start_version: string | number | bigint;
                 owner: Iterable<number> & {
                     length: number;
+                };
+            };
+            Party: {
+                start_version: string | number | bigint;
+                permissions: {
+                    default_permissions: string | number | bigint;
+                    members: Iterable<readonly [Iterable<number> & {
+                        length: number;
+                    }, string | number | bigint]> & {
+                        length: number;
+                    };
                 };
             };
         }>]> & {
@@ -8703,7 +9351,14 @@ export const TransactionEffects: import("@mysten/bcs").BcsEnum<{
                 start_version: string;
                 owner: number[];
             };
-        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][], Iterable<readonly [readonly [Iterable<number> & {
+            Party: {
+                start_version: string;
+                permissions: {
+                    default_permissions: string;
+                    members: [number[], string][];
+                };
+            };
+        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][], Iterable<readonly [readonly [Iterable<number> & {
             length: number;
         }, string | number | bigint, Iterable<number> & {
             length: number;
@@ -8724,6 +9379,17 @@ export const TransactionEffects: import("@mysten/bcs").BcsEnum<{
                     length: number;
                 };
             };
+            Party: {
+                start_version: string | number | bigint;
+                permissions: {
+                    default_permissions: string | number | bigint;
+                    members: Iterable<readonly [Iterable<number> & {
+                        length: number;
+                    }, string | number | bigint]> & {
+                        length: number;
+                    };
+                };
+            };
         }>]> & {
             length: number;
         }, string>;
@@ -8738,7 +9404,14 @@ export const TransactionEffects: import("@mysten/bcs").BcsEnum<{
                 start_version: string;
                 owner: number[];
             };
-        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][], Iterable<readonly [readonly [Iterable<number> & {
+            Party: {
+                start_version: string;
+                permissions: {
+                    default_permissions: string;
+                    members: [number[], string][];
+                };
+            };
+        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][], Iterable<readonly [readonly [Iterable<number> & {
             length: number;
         }, string | number | bigint, Iterable<number> & {
             length: number;
@@ -8757,6 +9430,17 @@ export const TransactionEffects: import("@mysten/bcs").BcsEnum<{
                 start_version: string | number | bigint;
                 owner: Iterable<number> & {
                     length: number;
+                };
+            };
+            Party: {
+                start_version: string | number | bigint;
+                permissions: {
+                    default_permissions: string | number | bigint;
+                    members: Iterable<readonly [Iterable<number> & {
+                        length: number;
+                    }, string | number | bigint]> & {
+                        length: number;
+                    };
                 };
             };
         }>]> & {
@@ -8802,6 +9486,17 @@ export const TransactionEffects: import("@mysten/bcs").BcsEnum<{
                 start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
                 owner: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                     length: number;
+                }, string>;
+            }, string>;
+            Party: import("@mysten/bcs").BcsStruct<{
+                start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                permissions: import("@mysten/bcs").BcsStruct<{
+                    default_permissions: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                    members: import("@mysten/bcs").BcsType<[number[], string][], Iterable<readonly [Iterable<number> & {
+                        length: number;
+                    }, string | number | bigint]> & {
+                        length: number;
+                    }, string>;
                 }, string>;
             }, string>;
         }, "Owner">], string>;
@@ -8905,6 +9600,7 @@ export const TransactionEffects: import("@mysten/bcs").BcsEnum<{
                             CannotMoveBorrowedValue: any;
                             CannotWriteToExtendedReference: any;
                             InvalidReferenceArgument: any;
+                            InvalidTxContext: any;
                         }, "CommandArgumentError">;
                     }, string>;
                     TypeArgumentError: import("@mysten/bcs").BcsStruct<{
@@ -9037,7 +9733,14 @@ export const TransactionEffects: import("@mysten/bcs").BcsEnum<{
                         start_version: string;
                         owner: number[];
                     };
-                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">];
+                    Party: {
+                        start_version: string;
+                        permissions: {
+                            default_permissions: string;
+                            members: [number[], string][];
+                        };
+                    };
+                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">];
             }, "NotExist" | "Exist">;
             output_state: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                 NotExist: unknown;
@@ -9052,7 +9755,14 @@ export const TransactionEffects: import("@mysten/bcs").BcsEnum<{
                         start_version: string;
                         owner: number[];
                     };
-                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">];
+                    Party: {
+                        start_version: string;
+                        permissions: {
+                            default_permissions: string;
+                            members: [number[], string][];
+                        };
+                    };
+                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">];
                 PackageWrite: [string, number[]];
                 AccumulatorWriteV1: {
                     address: {
@@ -9099,6 +9809,17 @@ export const TransactionEffects: import("@mysten/bcs").BcsEnum<{
                             length: number;
                         };
                     };
+                    Party: {
+                        start_version: string | number | bigint;
+                        permissions: {
+                            default_permissions: string | number | bigint;
+                            members: Iterable<readonly [Iterable<number> & {
+                                length: number;
+                            }, string | number | bigint]> & {
+                                length: number;
+                            };
+                        };
+                    };
                 }>];
             }>;
             output_state: import("@mysten/bcs").EnumInputShape<{
@@ -9120,6 +9841,17 @@ export const TransactionEffects: import("@mysten/bcs").BcsEnum<{
                         start_version: string | number | bigint;
                         owner: Iterable<number> & {
                             length: number;
+                        };
+                    };
+                    Party: {
+                        start_version: string | number | bigint;
+                        permissions: {
+                            default_permissions: string | number | bigint;
+                            members: Iterable<readonly [Iterable<number> & {
+                                length: number;
+                            }, string | number | bigint]> & {
+                                length: number;
+                            };
                         };
                     };
                 }>];
@@ -9316,6 +10048,17 @@ export const Object: import("@mysten/bcs").BcsStruct<{
                 length: number;
             }, string>;
         }, string>;
+        Party: import("@mysten/bcs").BcsStruct<{
+            start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+            permissions: import("@mysten/bcs").BcsStruct<{
+                default_permissions: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                members: import("@mysten/bcs").BcsType<[number[], string][], Iterable<readonly [Iterable<number> & {
+                    length: number;
+                }, string | number | bigint]> & {
+                    length: number;
+                }, string>;
+            }, string>;
+        }, string>;
     }, "Owner">;
     previous_transaction: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
         length: number;
@@ -9419,6 +10162,7 @@ export const CheckpointTransaction: import("@mysten/bcs").BcsStruct<{
                                 CannotMoveBorrowedValue: any;
                                 CannotWriteToExtendedReference: any;
                                 InvalidReferenceArgument: any;
+                                InvalidTxContext: any;
                             }, "CommandArgumentError">;
                         }, string>;
                         TypeArgumentError: import("@mysten/bcs").BcsStruct<{
@@ -9550,7 +10294,14 @@ export const CheckpointTransaction: import("@mysten/bcs").BcsStruct<{
                     start_version: string;
                     owner: number[];
                 };
-            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][], Iterable<readonly [readonly [Iterable<number> & {
+                Party: {
+                    start_version: string;
+                    permissions: {
+                        default_permissions: string;
+                        members: [number[], string][];
+                    };
+                };
+            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][], Iterable<readonly [readonly [Iterable<number> & {
                 length: number;
             }, string | number | bigint, Iterable<number> & {
                 length: number;
@@ -9569,6 +10320,17 @@ export const CheckpointTransaction: import("@mysten/bcs").BcsStruct<{
                     start_version: string | number | bigint;
                     owner: Iterable<number> & {
                         length: number;
+                    };
+                };
+                Party: {
+                    start_version: string | number | bigint;
+                    permissions: {
+                        default_permissions: string | number | bigint;
+                        members: Iterable<readonly [Iterable<number> & {
+                            length: number;
+                        }, string | number | bigint]> & {
+                            length: number;
+                        };
                     };
                 };
             }>]> & {
@@ -9585,7 +10347,14 @@ export const CheckpointTransaction: import("@mysten/bcs").BcsStruct<{
                     start_version: string;
                     owner: number[];
                 };
-            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][], Iterable<readonly [readonly [Iterable<number> & {
+                Party: {
+                    start_version: string;
+                    permissions: {
+                        default_permissions: string;
+                        members: [number[], string][];
+                    };
+                };
+            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][], Iterable<readonly [readonly [Iterable<number> & {
                 length: number;
             }, string | number | bigint, Iterable<number> & {
                 length: number;
@@ -9606,6 +10375,17 @@ export const CheckpointTransaction: import("@mysten/bcs").BcsStruct<{
                         length: number;
                     };
                 };
+                Party: {
+                    start_version: string | number | bigint;
+                    permissions: {
+                        default_permissions: string | number | bigint;
+                        members: Iterable<readonly [Iterable<number> & {
+                            length: number;
+                        }, string | number | bigint]> & {
+                            length: number;
+                        };
+                    };
+                };
             }>]> & {
                 length: number;
             }, string>;
@@ -9620,7 +10400,14 @@ export const CheckpointTransaction: import("@mysten/bcs").BcsStruct<{
                     start_version: string;
                     owner: number[];
                 };
-            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][], Iterable<readonly [readonly [Iterable<number> & {
+                Party: {
+                    start_version: string;
+                    permissions: {
+                        default_permissions: string;
+                        members: [number[], string][];
+                    };
+                };
+            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][], Iterable<readonly [readonly [Iterable<number> & {
                 length: number;
             }, string | number | bigint, Iterable<number> & {
                 length: number;
@@ -9639,6 +10426,17 @@ export const CheckpointTransaction: import("@mysten/bcs").BcsStruct<{
                     start_version: string | number | bigint;
                     owner: Iterable<number> & {
                         length: number;
+                    };
+                };
+                Party: {
+                    start_version: string | number | bigint;
+                    permissions: {
+                        default_permissions: string | number | bigint;
+                        members: Iterable<readonly [Iterable<number> & {
+                            length: number;
+                        }, string | number | bigint]> & {
+                            length: number;
+                        };
                     };
                 };
             }>]> & {
@@ -9684,6 +10482,17 @@ export const CheckpointTransaction: import("@mysten/bcs").BcsStruct<{
                     start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
                     owner: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                         length: number;
+                    }, string>;
+                }, string>;
+                Party: import("@mysten/bcs").BcsStruct<{
+                    start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                    permissions: import("@mysten/bcs").BcsStruct<{
+                        default_permissions: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                        members: import("@mysten/bcs").BcsType<[number[], string][], Iterable<readonly [Iterable<number> & {
+                            length: number;
+                        }, string | number | bigint]> & {
+                            length: number;
+                        }, string>;
                     }, string>;
                 }, string>;
             }, "Owner">], string>;
@@ -9787,6 +10596,7 @@ export const CheckpointTransaction: import("@mysten/bcs").BcsStruct<{
                                 CannotMoveBorrowedValue: any;
                                 CannotWriteToExtendedReference: any;
                                 InvalidReferenceArgument: any;
+                                InvalidTxContext: any;
                             }, "CommandArgumentError">;
                         }, string>;
                         TypeArgumentError: import("@mysten/bcs").BcsStruct<{
@@ -9919,7 +10729,14 @@ export const CheckpointTransaction: import("@mysten/bcs").BcsStruct<{
                             start_version: string;
                             owner: number[];
                         };
-                    }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">];
+                        Party: {
+                            start_version: string;
+                            permissions: {
+                                default_permissions: string;
+                                members: [number[], string][];
+                            };
+                        };
+                    }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">];
                 }, "NotExist" | "Exist">;
                 output_state: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                     NotExist: unknown;
@@ -9934,7 +10751,14 @@ export const CheckpointTransaction: import("@mysten/bcs").BcsStruct<{
                             start_version: string;
                             owner: number[];
                         };
-                    }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">];
+                        Party: {
+                            start_version: string;
+                            permissions: {
+                                default_permissions: string;
+                                members: [number[], string][];
+                            };
+                        };
+                    }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">];
                     PackageWrite: [string, number[]];
                     AccumulatorWriteV1: {
                         address: {
@@ -9981,6 +10805,17 @@ export const CheckpointTransaction: import("@mysten/bcs").BcsStruct<{
                                 length: number;
                             };
                         };
+                        Party: {
+                            start_version: string | number | bigint;
+                            permissions: {
+                                default_permissions: string | number | bigint;
+                                members: Iterable<readonly [Iterable<number> & {
+                                    length: number;
+                                }, string | number | bigint]> & {
+                                    length: number;
+                                };
+                            };
+                        };
                     }>];
                 }>;
                 output_state: import("@mysten/bcs").EnumInputShape<{
@@ -10002,6 +10837,17 @@ export const CheckpointTransaction: import("@mysten/bcs").BcsStruct<{
                             start_version: string | number | bigint;
                             owner: Iterable<number> & {
                                 length: number;
+                            };
+                        };
+                        Party: {
+                            start_version: string | number | bigint;
+                            permissions: {
+                                default_permissions: string | number | bigint;
+                                members: Iterable<readonly [Iterable<number> & {
+                                    length: number;
+                                }, string | number | bigint]> & {
+                                    length: number;
+                                };
                             };
                         };
                     }>];
@@ -10147,7 +10993,14 @@ export const CheckpointTransaction: import("@mysten/bcs").BcsStruct<{
                 start_version: string;
                 owner: number[];
             };
-        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">;
+            Party: {
+                start_version: string;
+                permissions: {
+                    default_permissions: string;
+                    members: [number[], string][];
+                };
+            };
+        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">;
         previous_transaction: number[];
         storage_rebate: string;
     }[], Iterable<{
@@ -10218,6 +11071,17 @@ export const CheckpointTransaction: import("@mysten/bcs").BcsStruct<{
                 start_version: string | number | bigint;
                 owner: Iterable<number> & {
                     length: number;
+                };
+            };
+            Party: {
+                start_version: string | number | bigint;
+                permissions: {
+                    default_permissions: string | number | bigint;
+                    members: Iterable<readonly [Iterable<number> & {
+                        length: number;
+                    }, string | number | bigint]> & {
+                        length: number;
+                    };
                 };
             };
         }>;
@@ -10274,7 +11138,14 @@ export const CheckpointTransaction: import("@mysten/bcs").BcsStruct<{
                 start_version: string;
                 owner: number[];
             };
-        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">;
+            Party: {
+                start_version: string;
+                permissions: {
+                    default_permissions: string;
+                    members: [number[], string][];
+                };
+            };
+        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">;
         previous_transaction: number[];
         storage_rebate: string;
     }[], Iterable<{
@@ -10345,6 +11216,17 @@ export const CheckpointTransaction: import("@mysten/bcs").BcsStruct<{
                 start_version: string | number | bigint;
                 owner: Iterable<number> & {
                     length: number;
+                };
+            };
+            Party: {
+                start_version: string | number | bigint;
+                permissions: {
+                    default_permissions: string | number | bigint;
+                    members: Iterable<readonly [Iterable<number> & {
+                        length: number;
+                    }, string | number | bigint]> & {
+                        length: number;
+                    };
                 };
             };
         }>;
@@ -10493,7 +11375,8 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                                     CannotMoveBorrowedValue: unknown;
                                     CannotWriteToExtendedReference: unknown;
                                     InvalidReferenceArgument: unknown;
-                                }, "TypeMismatch" | "InvalidBCSBytes" | "InvalidUsageOfPureArg" | "InvalidArgumentToPrivateEntryFunction" | "IndexOutOfBounds" | "SecondaryIndexOutOfBounds" | "InvalidResultArity" | "InvalidGasCoinUsage" | "InvalidValueUsage" | "InvalidObjectByValue" | "InvalidObjectByMutRef" | "SharedObjectOperationNotAllowed" | "InvalidArgumentArity" | "InvalidTransferObject" | "InvalidMakeMoveVecNonObjectArgument" | "ArgumentWithoutValue" | "CannotMoveBorrowedValue" | "CannotWriteToExtendedReference" | "InvalidReferenceArgument">;
+                                    InvalidTxContext: unknown;
+                                }, "TypeMismatch" | "InvalidBCSBytes" | "InvalidUsageOfPureArg" | "InvalidArgumentToPrivateEntryFunction" | "IndexOutOfBounds" | "SecondaryIndexOutOfBounds" | "InvalidResultArity" | "InvalidGasCoinUsage" | "InvalidValueUsage" | "InvalidObjectByValue" | "InvalidObjectByMutRef" | "SharedObjectOperationNotAllowed" | "InvalidArgumentArity" | "InvalidTransferObject" | "InvalidMakeMoveVecNonObjectArgument" | "ArgumentWithoutValue" | "CannotMoveBorrowedValue" | "CannotWriteToExtendedReference" | "InvalidReferenceArgument" | "InvalidTxContext">;
                             };
                             TypeArgumentError: {
                                 argument_idx: number;
@@ -10594,7 +11477,14 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                         start_version: string;
                         owner: number[];
                     };
-                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][];
+                    Party: {
+                        start_version: string;
+                        permissions: {
+                            default_permissions: string;
+                            members: [number[], string][];
+                        };
+                    };
+                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][];
                 mutated: [[number[], string, number[]], import("@mysten/bcs").EnumOutputShapeWithKeys<{
                     AddressOwner: number[];
                     ObjectOwner: number[];
@@ -10606,7 +11496,14 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                         start_version: string;
                         owner: number[];
                     };
-                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][];
+                    Party: {
+                        start_version: string;
+                        permissions: {
+                            default_permissions: string;
+                            members: [number[], string][];
+                        };
+                    };
+                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][];
                 unwrapped: [[number[], string, number[]], import("@mysten/bcs").EnumOutputShapeWithKeys<{
                     AddressOwner: number[];
                     ObjectOwner: number[];
@@ -10618,7 +11515,14 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                         start_version: string;
                         owner: number[];
                     };
-                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][];
+                    Party: {
+                        start_version: string;
+                        permissions: {
+                            default_permissions: string;
+                            members: [number[], string][];
+                        };
+                    };
+                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][];
                 deleted: [number[], string, number[]][];
                 unwrapped_then_deleted: [number[], string, number[]][];
                 wrapped: [number[], string, number[]][];
@@ -10633,7 +11537,14 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                         start_version: string;
                         owner: number[];
                     };
-                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">];
+                    Party: {
+                        start_version: string;
+                        permissions: {
+                            default_permissions: string;
+                            members: [number[], string][];
+                        };
+                    };
+                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">];
                 events_digest: number[];
                 dependencies: number[][];
             };
@@ -10714,7 +11625,8 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                                     CannotMoveBorrowedValue: unknown;
                                     CannotWriteToExtendedReference: unknown;
                                     InvalidReferenceArgument: unknown;
-                                }, "TypeMismatch" | "InvalidBCSBytes" | "InvalidUsageOfPureArg" | "InvalidArgumentToPrivateEntryFunction" | "IndexOutOfBounds" | "SecondaryIndexOutOfBounds" | "InvalidResultArity" | "InvalidGasCoinUsage" | "InvalidValueUsage" | "InvalidObjectByValue" | "InvalidObjectByMutRef" | "SharedObjectOperationNotAllowed" | "InvalidArgumentArity" | "InvalidTransferObject" | "InvalidMakeMoveVecNonObjectArgument" | "ArgumentWithoutValue" | "CannotMoveBorrowedValue" | "CannotWriteToExtendedReference" | "InvalidReferenceArgument">;
+                                    InvalidTxContext: unknown;
+                                }, "TypeMismatch" | "InvalidBCSBytes" | "InvalidUsageOfPureArg" | "InvalidArgumentToPrivateEntryFunction" | "IndexOutOfBounds" | "SecondaryIndexOutOfBounds" | "InvalidResultArity" | "InvalidGasCoinUsage" | "InvalidValueUsage" | "InvalidObjectByValue" | "InvalidObjectByMutRef" | "SharedObjectOperationNotAllowed" | "InvalidArgumentArity" | "InvalidTransferObject" | "InvalidMakeMoveVecNonObjectArgument" | "ArgumentWithoutValue" | "CannotMoveBorrowedValue" | "CannotWriteToExtendedReference" | "InvalidReferenceArgument" | "InvalidTxContext">;
                             };
                             TypeArgumentError: {
                                 argument_idx: number;
@@ -10820,7 +11732,14 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                                 start_version: string;
                                 owner: number[];
                             };
-                        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">];
+                            Party: {
+                                start_version: string;
+                                permissions: {
+                                    default_permissions: string;
+                                    members: [number[], string][];
+                                };
+                            };
+                        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">];
                     }, "NotExist" | "Exist">;
                     output_state: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                         NotExist: unknown;
@@ -10835,7 +11754,14 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                                 start_version: string;
                                 owner: number[];
                             };
-                        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">];
+                            Party: {
+                                start_version: string;
+                                permissions: {
+                                    default_permissions: string;
+                                    members: [number[], string][];
+                                };
+                            };
+                        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">];
                         PackageWrite: [string, number[]];
                         AccumulatorWriteV1: {
                             address: {
@@ -10929,7 +11855,14 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                     start_version: string;
                     owner: number[];
                 };
-            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">;
+                Party: {
+                    start_version: string;
+                    permissions: {
+                        default_permissions: string;
+                        members: [number[], string][];
+                    };
+                };
+            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">;
             previous_transaction: number[];
             storage_rebate: string;
         }[];
@@ -10979,7 +11912,14 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                     start_version: string;
                     owner: number[];
                 };
-            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">;
+                Party: {
+                    start_version: string;
+                    permissions: {
+                        default_permissions: string;
+                        members: [number[], string][];
+                    };
+                };
+            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">;
             previous_transaction: number[];
             storage_rebate: string;
         }[];
@@ -11072,6 +12012,7 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                                     CannotMoveBorrowedValue: unknown;
                                     CannotWriteToExtendedReference: unknown;
                                     InvalidReferenceArgument: unknown;
+                                    InvalidTxContext: unknown;
                                 }>;
                             };
                             TypeArgumentError: {
@@ -11213,6 +12154,17 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                             length: number;
                         };
                     };
+                    Party: {
+                        start_version: string | number | bigint;
+                        permissions: {
+                            default_permissions: string | number | bigint;
+                            members: Iterable<readonly [Iterable<number> & {
+                                length: number;
+                            }, string | number | bigint]> & {
+                                length: number;
+                            };
+                        };
+                    };
                 }>]> & {
                     length: number;
                 };
@@ -11237,6 +12189,17 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                             length: number;
                         };
                     };
+                    Party: {
+                        start_version: string | number | bigint;
+                        permissions: {
+                            default_permissions: string | number | bigint;
+                            members: Iterable<readonly [Iterable<number> & {
+                                length: number;
+                            }, string | number | bigint]> & {
+                                length: number;
+                            };
+                        };
+                    };
                 }>]> & {
                     length: number;
                 };
@@ -11259,6 +12222,17 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                         start_version: string | number | bigint;
                         owner: Iterable<number> & {
                             length: number;
+                        };
+                    };
+                    Party: {
+                        start_version: string | number | bigint;
+                        permissions: {
+                            default_permissions: string | number | bigint;
+                            members: Iterable<readonly [Iterable<number> & {
+                                length: number;
+                            }, string | number | bigint]> & {
+                                length: number;
+                            };
                         };
                     };
                 }>]> & {
@@ -11304,6 +12278,17 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                         start_version: string | number | bigint;
                         owner: Iterable<number> & {
                             length: number;
+                        };
+                    };
+                    Party: {
+                        start_version: string | number | bigint;
+                        permissions: {
+                            default_permissions: string | number | bigint;
+                            members: Iterable<readonly [Iterable<number> & {
+                                length: number;
+                            }, string | number | bigint]> & {
+                                length: number;
+                            };
                         };
                     };
                 }>];
@@ -11399,6 +12384,7 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                                     CannotMoveBorrowedValue: unknown;
                                     CannotWriteToExtendedReference: unknown;
                                     InvalidReferenceArgument: unknown;
+                                    InvalidTxContext: unknown;
                                 }>;
                             };
                             TypeArgumentError: {
@@ -11541,6 +12527,17 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                                     length: number;
                                 };
                             };
+                            Party: {
+                                start_version: string | number | bigint;
+                                permissions: {
+                                    default_permissions: string | number | bigint;
+                                    members: Iterable<readonly [Iterable<number> & {
+                                        length: number;
+                                    }, string | number | bigint]> & {
+                                        length: number;
+                                    };
+                                };
+                            };
                         }>];
                     }>;
                     output_state: import("@mysten/bcs").EnumInputShape<{
@@ -11562,6 +12559,17 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                                 start_version: string | number | bigint;
                                 owner: Iterable<number> & {
                                     length: number;
+                                };
+                            };
+                            Party: {
+                                start_version: string | number | bigint;
+                                permissions: {
+                                    default_permissions: string | number | bigint;
+                                    members: Iterable<readonly [Iterable<number> & {
+                                        length: number;
+                                    }, string | number | bigint]> & {
+                                        length: number;
+                                    };
                                 };
                             };
                         }>];
@@ -11712,6 +12720,17 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                         length: number;
                     };
                 };
+                Party: {
+                    start_version: string | number | bigint;
+                    permissions: {
+                        default_permissions: string | number | bigint;
+                        members: Iterable<readonly [Iterable<number> & {
+                            length: number;
+                        }, string | number | bigint]> & {
+                            length: number;
+                        };
+                    };
+                };
             }>;
             previous_transaction: Iterable<number> & {
                 length: number;
@@ -11788,6 +12807,17 @@ export const CheckpointData: import("@mysten/bcs").BcsStruct<{
                     start_version: string | number | bigint;
                     owner: Iterable<number> & {
                         length: number;
+                    };
+                };
+                Party: {
+                    start_version: string | number | bigint;
+                    permissions: {
+                        default_permissions: string | number | bigint;
+                        members: Iterable<readonly [Iterable<number> & {
+                            length: number;
+                        }, string | number | bigint]> & {
+                            length: number;
+                        };
                     };
                 };
             }>;
@@ -11921,6 +12951,7 @@ export const ExecutionData: import("@mysten/bcs").BcsStruct<{
                                 CannotMoveBorrowedValue: any;
                                 CannotWriteToExtendedReference: any;
                                 InvalidReferenceArgument: any;
+                                InvalidTxContext: any;
                             }, "CommandArgumentError">;
                         }, string>;
                         TypeArgumentError: import("@mysten/bcs").BcsStruct<{
@@ -12052,7 +13083,14 @@ export const ExecutionData: import("@mysten/bcs").BcsStruct<{
                     start_version: string;
                     owner: number[];
                 };
-            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][], Iterable<readonly [readonly [Iterable<number> & {
+                Party: {
+                    start_version: string;
+                    permissions: {
+                        default_permissions: string;
+                        members: [number[], string][];
+                    };
+                };
+            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][], Iterable<readonly [readonly [Iterable<number> & {
                 length: number;
             }, string | number | bigint, Iterable<number> & {
                 length: number;
@@ -12071,6 +13109,17 @@ export const ExecutionData: import("@mysten/bcs").BcsStruct<{
                     start_version: string | number | bigint;
                     owner: Iterable<number> & {
                         length: number;
+                    };
+                };
+                Party: {
+                    start_version: string | number | bigint;
+                    permissions: {
+                        default_permissions: string | number | bigint;
+                        members: Iterable<readonly [Iterable<number> & {
+                            length: number;
+                        }, string | number | bigint]> & {
+                            length: number;
+                        };
                     };
                 };
             }>]> & {
@@ -12087,7 +13136,14 @@ export const ExecutionData: import("@mysten/bcs").BcsStruct<{
                     start_version: string;
                     owner: number[];
                 };
-            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][], Iterable<readonly [readonly [Iterable<number> & {
+                Party: {
+                    start_version: string;
+                    permissions: {
+                        default_permissions: string;
+                        members: [number[], string][];
+                    };
+                };
+            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][], Iterable<readonly [readonly [Iterable<number> & {
                 length: number;
             }, string | number | bigint, Iterable<number> & {
                 length: number;
@@ -12108,6 +13164,17 @@ export const ExecutionData: import("@mysten/bcs").BcsStruct<{
                         length: number;
                     };
                 };
+                Party: {
+                    start_version: string | number | bigint;
+                    permissions: {
+                        default_permissions: string | number | bigint;
+                        members: Iterable<readonly [Iterable<number> & {
+                            length: number;
+                        }, string | number | bigint]> & {
+                            length: number;
+                        };
+                    };
+                };
             }>]> & {
                 length: number;
             }, string>;
@@ -12122,7 +13189,14 @@ export const ExecutionData: import("@mysten/bcs").BcsStruct<{
                     start_version: string;
                     owner: number[];
                 };
-            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][], Iterable<readonly [readonly [Iterable<number> & {
+                Party: {
+                    start_version: string;
+                    permissions: {
+                        default_permissions: string;
+                        members: [number[], string][];
+                    };
+                };
+            }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][], Iterable<readonly [readonly [Iterable<number> & {
                 length: number;
             }, string | number | bigint, Iterable<number> & {
                 length: number;
@@ -12141,6 +13215,17 @@ export const ExecutionData: import("@mysten/bcs").BcsStruct<{
                     start_version: string | number | bigint;
                     owner: Iterable<number> & {
                         length: number;
+                    };
+                };
+                Party: {
+                    start_version: string | number | bigint;
+                    permissions: {
+                        default_permissions: string | number | bigint;
+                        members: Iterable<readonly [Iterable<number> & {
+                            length: number;
+                        }, string | number | bigint]> & {
+                            length: number;
+                        };
                     };
                 };
             }>]> & {
@@ -12186,6 +13271,17 @@ export const ExecutionData: import("@mysten/bcs").BcsStruct<{
                     start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
                     owner: import("@mysten/bcs").BcsType<number[], Iterable<number> & {
                         length: number;
+                    }, string>;
+                }, string>;
+                Party: import("@mysten/bcs").BcsStruct<{
+                    start_version: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                    permissions: import("@mysten/bcs").BcsStruct<{
+                        default_permissions: import("@mysten/bcs").BcsType<string, string | number | bigint, "u64">;
+                        members: import("@mysten/bcs").BcsType<[number[], string][], Iterable<readonly [Iterable<number> & {
+                            length: number;
+                        }, string | number | bigint]> & {
+                            length: number;
+                        }, string>;
                     }, string>;
                 }, string>;
             }, "Owner">], string>;
@@ -12289,6 +13385,7 @@ export const ExecutionData: import("@mysten/bcs").BcsStruct<{
                                 CannotMoveBorrowedValue: any;
                                 CannotWriteToExtendedReference: any;
                                 InvalidReferenceArgument: any;
+                                InvalidTxContext: any;
                             }, "CommandArgumentError">;
                         }, string>;
                         TypeArgumentError: import("@mysten/bcs").BcsStruct<{
@@ -12421,7 +13518,14 @@ export const ExecutionData: import("@mysten/bcs").BcsStruct<{
                             start_version: string;
                             owner: number[];
                         };
-                    }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">];
+                        Party: {
+                            start_version: string;
+                            permissions: {
+                                default_permissions: string;
+                                members: [number[], string][];
+                            };
+                        };
+                    }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">];
                 }, "NotExist" | "Exist">;
                 output_state: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                     NotExist: unknown;
@@ -12436,7 +13540,14 @@ export const ExecutionData: import("@mysten/bcs").BcsStruct<{
                             start_version: string;
                             owner: number[];
                         };
-                    }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">];
+                        Party: {
+                            start_version: string;
+                            permissions: {
+                                default_permissions: string;
+                                members: [number[], string][];
+                            };
+                        };
+                    }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">];
                     PackageWrite: [string, number[]];
                     AccumulatorWriteV1: {
                         address: {
@@ -12483,6 +13594,17 @@ export const ExecutionData: import("@mysten/bcs").BcsStruct<{
                                 length: number;
                             };
                         };
+                        Party: {
+                            start_version: string | number | bigint;
+                            permissions: {
+                                default_permissions: string | number | bigint;
+                                members: Iterable<readonly [Iterable<number> & {
+                                    length: number;
+                                }, string | number | bigint]> & {
+                                    length: number;
+                                };
+                            };
+                        };
                     }>];
                 }>;
                 output_state: import("@mysten/bcs").EnumInputShape<{
@@ -12504,6 +13626,17 @@ export const ExecutionData: import("@mysten/bcs").BcsStruct<{
                             start_version: string | number | bigint;
                             owner: Iterable<number> & {
                                 length: number;
+                            };
+                        };
+                        Party: {
+                            start_version: string | number | bigint;
+                            permissions: {
+                                default_permissions: string | number | bigint;
+                                members: Iterable<readonly [Iterable<number> & {
+                                    length: number;
+                                }, string | number | bigint]> & {
+                                    length: number;
+                                };
                             };
                         };
                     }>];
@@ -12649,7 +13782,8 @@ export const FullCheckpointContents: import("@mysten/bcs").BcsStruct<{
                                     CannotMoveBorrowedValue: unknown;
                                     CannotWriteToExtendedReference: unknown;
                                     InvalidReferenceArgument: unknown;
-                                }, "TypeMismatch" | "InvalidBCSBytes" | "InvalidUsageOfPureArg" | "InvalidArgumentToPrivateEntryFunction" | "IndexOutOfBounds" | "SecondaryIndexOutOfBounds" | "InvalidResultArity" | "InvalidGasCoinUsage" | "InvalidValueUsage" | "InvalidObjectByValue" | "InvalidObjectByMutRef" | "SharedObjectOperationNotAllowed" | "InvalidArgumentArity" | "InvalidTransferObject" | "InvalidMakeMoveVecNonObjectArgument" | "ArgumentWithoutValue" | "CannotMoveBorrowedValue" | "CannotWriteToExtendedReference" | "InvalidReferenceArgument">;
+                                    InvalidTxContext: unknown;
+                                }, "TypeMismatch" | "InvalidBCSBytes" | "InvalidUsageOfPureArg" | "InvalidArgumentToPrivateEntryFunction" | "IndexOutOfBounds" | "SecondaryIndexOutOfBounds" | "InvalidResultArity" | "InvalidGasCoinUsage" | "InvalidValueUsage" | "InvalidObjectByValue" | "InvalidObjectByMutRef" | "SharedObjectOperationNotAllowed" | "InvalidArgumentArity" | "InvalidTransferObject" | "InvalidMakeMoveVecNonObjectArgument" | "ArgumentWithoutValue" | "CannotMoveBorrowedValue" | "CannotWriteToExtendedReference" | "InvalidReferenceArgument" | "InvalidTxContext">;
                             };
                             TypeArgumentError: {
                                 argument_idx: number;
@@ -12750,7 +13884,14 @@ export const FullCheckpointContents: import("@mysten/bcs").BcsStruct<{
                         start_version: string;
                         owner: number[];
                     };
-                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][];
+                    Party: {
+                        start_version: string;
+                        permissions: {
+                            default_permissions: string;
+                            members: [number[], string][];
+                        };
+                    };
+                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][];
                 mutated: [[number[], string, number[]], import("@mysten/bcs").EnumOutputShapeWithKeys<{
                     AddressOwner: number[];
                     ObjectOwner: number[];
@@ -12762,7 +13903,14 @@ export const FullCheckpointContents: import("@mysten/bcs").BcsStruct<{
                         start_version: string;
                         owner: number[];
                     };
-                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][];
+                    Party: {
+                        start_version: string;
+                        permissions: {
+                            default_permissions: string;
+                            members: [number[], string][];
+                        };
+                    };
+                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][];
                 unwrapped: [[number[], string, number[]], import("@mysten/bcs").EnumOutputShapeWithKeys<{
                     AddressOwner: number[];
                     ObjectOwner: number[];
@@ -12774,7 +13922,14 @@ export const FullCheckpointContents: import("@mysten/bcs").BcsStruct<{
                         start_version: string;
                         owner: number[];
                     };
-                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">][];
+                    Party: {
+                        start_version: string;
+                        permissions: {
+                            default_permissions: string;
+                            members: [number[], string][];
+                        };
+                    };
+                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">][];
                 deleted: [number[], string, number[]][];
                 unwrapped_then_deleted: [number[], string, number[]][];
                 wrapped: [number[], string, number[]][];
@@ -12789,7 +13944,14 @@ export const FullCheckpointContents: import("@mysten/bcs").BcsStruct<{
                         start_version: string;
                         owner: number[];
                     };
-                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">];
+                    Party: {
+                        start_version: string;
+                        permissions: {
+                            default_permissions: string;
+                            members: [number[], string][];
+                        };
+                    };
+                }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">];
                 events_digest: number[];
                 dependencies: number[][];
             };
@@ -12870,7 +14032,8 @@ export const FullCheckpointContents: import("@mysten/bcs").BcsStruct<{
                                     CannotMoveBorrowedValue: unknown;
                                     CannotWriteToExtendedReference: unknown;
                                     InvalidReferenceArgument: unknown;
-                                }, "TypeMismatch" | "InvalidBCSBytes" | "InvalidUsageOfPureArg" | "InvalidArgumentToPrivateEntryFunction" | "IndexOutOfBounds" | "SecondaryIndexOutOfBounds" | "InvalidResultArity" | "InvalidGasCoinUsage" | "InvalidValueUsage" | "InvalidObjectByValue" | "InvalidObjectByMutRef" | "SharedObjectOperationNotAllowed" | "InvalidArgumentArity" | "InvalidTransferObject" | "InvalidMakeMoveVecNonObjectArgument" | "ArgumentWithoutValue" | "CannotMoveBorrowedValue" | "CannotWriteToExtendedReference" | "InvalidReferenceArgument">;
+                                    InvalidTxContext: unknown;
+                                }, "TypeMismatch" | "InvalidBCSBytes" | "InvalidUsageOfPureArg" | "InvalidArgumentToPrivateEntryFunction" | "IndexOutOfBounds" | "SecondaryIndexOutOfBounds" | "InvalidResultArity" | "InvalidGasCoinUsage" | "InvalidValueUsage" | "InvalidObjectByValue" | "InvalidObjectByMutRef" | "SharedObjectOperationNotAllowed" | "InvalidArgumentArity" | "InvalidTransferObject" | "InvalidMakeMoveVecNonObjectArgument" | "ArgumentWithoutValue" | "CannotMoveBorrowedValue" | "CannotWriteToExtendedReference" | "InvalidReferenceArgument" | "InvalidTxContext">;
                             };
                             TypeArgumentError: {
                                 argument_idx: number;
@@ -12976,7 +14139,14 @@ export const FullCheckpointContents: import("@mysten/bcs").BcsStruct<{
                                 start_version: string;
                                 owner: number[];
                             };
-                        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">];
+                            Party: {
+                                start_version: string;
+                                permissions: {
+                                    default_permissions: string;
+                                    members: [number[], string][];
+                                };
+                            };
+                        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">];
                     }, "NotExist" | "Exist">;
                     output_state: import("@mysten/bcs").EnumOutputShapeWithKeys<{
                         NotExist: unknown;
@@ -12991,7 +14161,14 @@ export const FullCheckpointContents: import("@mysten/bcs").BcsStruct<{
                                 start_version: string;
                                 owner: number[];
                             };
-                        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner">];
+                            Party: {
+                                start_version: string;
+                                permissions: {
+                                    default_permissions: string;
+                                    members: [number[], string][];
+                                };
+                            };
+                        }, "Immutable" | "AddressOwner" | "ObjectOwner" | "Shared" | "ConsensusAddressOwner" | "Party">];
                         PackageWrite: [string, number[]];
                         AccumulatorWriteV1: {
                             address: {
@@ -13114,6 +14291,7 @@ export const FullCheckpointContents: import("@mysten/bcs").BcsStruct<{
                                     CannotMoveBorrowedValue: unknown;
                                     CannotWriteToExtendedReference: unknown;
                                     InvalidReferenceArgument: unknown;
+                                    InvalidTxContext: unknown;
                                 }>;
                             };
                             TypeArgumentError: {
@@ -13255,6 +14433,17 @@ export const FullCheckpointContents: import("@mysten/bcs").BcsStruct<{
                             length: number;
                         };
                     };
+                    Party: {
+                        start_version: string | number | bigint;
+                        permissions: {
+                            default_permissions: string | number | bigint;
+                            members: Iterable<readonly [Iterable<number> & {
+                                length: number;
+                            }, string | number | bigint]> & {
+                                length: number;
+                            };
+                        };
+                    };
                 }>]> & {
                     length: number;
                 };
@@ -13279,6 +14468,17 @@ export const FullCheckpointContents: import("@mysten/bcs").BcsStruct<{
                             length: number;
                         };
                     };
+                    Party: {
+                        start_version: string | number | bigint;
+                        permissions: {
+                            default_permissions: string | number | bigint;
+                            members: Iterable<readonly [Iterable<number> & {
+                                length: number;
+                            }, string | number | bigint]> & {
+                                length: number;
+                            };
+                        };
+                    };
                 }>]> & {
                     length: number;
                 };
@@ -13301,6 +14501,17 @@ export const FullCheckpointContents: import("@mysten/bcs").BcsStruct<{
                         start_version: string | number | bigint;
                         owner: Iterable<number> & {
                             length: number;
+                        };
+                    };
+                    Party: {
+                        start_version: string | number | bigint;
+                        permissions: {
+                            default_permissions: string | number | bigint;
+                            members: Iterable<readonly [Iterable<number> & {
+                                length: number;
+                            }, string | number | bigint]> & {
+                                length: number;
+                            };
                         };
                     };
                 }>]> & {
@@ -13346,6 +14557,17 @@ export const FullCheckpointContents: import("@mysten/bcs").BcsStruct<{
                         start_version: string | number | bigint;
                         owner: Iterable<number> & {
                             length: number;
+                        };
+                    };
+                    Party: {
+                        start_version: string | number | bigint;
+                        permissions: {
+                            default_permissions: string | number | bigint;
+                            members: Iterable<readonly [Iterable<number> & {
+                                length: number;
+                            }, string | number | bigint]> & {
+                                length: number;
+                            };
                         };
                     };
                 }>];
@@ -13441,6 +14663,7 @@ export const FullCheckpointContents: import("@mysten/bcs").BcsStruct<{
                                     CannotMoveBorrowedValue: unknown;
                                     CannotWriteToExtendedReference: unknown;
                                     InvalidReferenceArgument: unknown;
+                                    InvalidTxContext: unknown;
                                 }>;
                             };
                             TypeArgumentError: {
@@ -13583,6 +14806,17 @@ export const FullCheckpointContents: import("@mysten/bcs").BcsStruct<{
                                     length: number;
                                 };
                             };
+                            Party: {
+                                start_version: string | number | bigint;
+                                permissions: {
+                                    default_permissions: string | number | bigint;
+                                    members: Iterable<readonly [Iterable<number> & {
+                                        length: number;
+                                    }, string | number | bigint]> & {
+                                        length: number;
+                                    };
+                                };
+                            };
                         }>];
                     }>;
                     output_state: import("@mysten/bcs").EnumInputShape<{
@@ -13604,6 +14838,17 @@ export const FullCheckpointContents: import("@mysten/bcs").BcsStruct<{
                                 start_version: string | number | bigint;
                                 owner: Iterable<number> & {
                                     length: number;
+                                };
+                            };
+                            Party: {
+                                start_version: string | number | bigint;
+                                permissions: {
+                                    default_permissions: string | number | bigint;
+                                    members: Iterable<readonly [Iterable<number> & {
+                                        length: number;
+                                    }, string | number | bigint]> & {
+                                        length: number;
+                                    };
                                 };
                             };
                         }>];

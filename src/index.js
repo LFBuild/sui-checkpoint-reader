@@ -311,7 +311,11 @@ export async function read_checkpoints({
       const file_number = +path.basename(file_path, '.chk')
 
       // if in configured range, we add it to the known checkpoints
-      if (file_number >= from && file_number <= to && !known_checkpoints.has(file_number)) {
+      if (
+        file_number >= from &&
+        file_number <= to &&
+        !known_checkpoints.has(file_number)
+      ) {
         const buffer = readFileSync(file_path)
         known_checkpoints.set(file_number, buffer)
       }
@@ -527,10 +531,13 @@ export async function read_checkpoints({
           })
           await process_checkpoint(parsed_checkpoint, current_checkpoint_number)
           processing_settings.current_checkpoint++
-          
+
           // Clean up old checkpoints from memory periodically to prevent leaks
           // Do cleanup every 20 processed checkpoints or when map size > 50
-          if (processing_settings.current_checkpoint % 1000 === 0 || known_checkpoints.size > 100) {
+          if (
+            processing_settings.current_checkpoint % 1000 === 0 ||
+            known_checkpoints.size > 100
+          ) {
             const keys_to_delete = []
             for (const [key] of known_checkpoints) {
               if (key < processing_settings.current_checkpoint) {
@@ -540,11 +547,11 @@ export async function read_checkpoints({
             if (keys_to_delete.length > 0) {
               keys_to_delete.forEach(key => known_checkpoints.delete(key))
               log.debug(
-                { 
+                {
                   cleaned_up: keys_to_delete.length,
-                  map_size_after: known_checkpoints.size 
+                  map_size_after: known_checkpoints.size,
                 },
-                '[memory] cleaned up old checkpoints'
+                '[memory] cleaned up old checkpoints',
               )
             }
           }

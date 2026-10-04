@@ -100,6 +100,18 @@
       "TYPENAME": "Digest"
     }
   },
+  "AllowedProposers": {
+    "STRUCT": [
+      {
+        "epoch": "U64"
+      },
+      {
+        "proposers": {
+          "SEQ": "U32"
+        }
+      }
+    ]
+  },
   "Argument": {
     "ENUM": {
       "0": {
@@ -656,6 +668,9 @@
       },
       "18": {
         "InvalidReferenceArgument": "UNIT"
+      },
+      "19": {
+        "InvalidTxContext": "UNIT"
       }
     }
   },
@@ -1037,6 +1052,9 @@
             "TYPENAME": "WriteAccumulatorStorageCost"
           }
         }
+      },
+      "13": {
+        "ForwardingAddressRegistryCreate": "UNIT"
       }
     }
   },
@@ -2034,6 +2052,22 @@
             }
           ]
         }
+      },
+      "5": {
+        "Party": {
+          "STRUCT": [
+            {
+              "start_version": {
+                "TYPENAME": "SequenceNumber"
+              }
+            },
+            {
+              "permissions": {
+                "TYPENAME": "RawPartySerde"
+              }
+            }
+          ]
+        }
       }
     }
   },
@@ -2214,6 +2248,25 @@
       {
         "randomness_obj_initial_shared_version": {
           "TYPENAME": "SequenceNumber"
+        }
+      }
+    ]
+  },
+  "RawPartySerde": {
+    "STRUCT": [
+      {
+        "default_permissions": "U64"
+      },
+      {
+        "members": {
+          "SEQ": {
+            "TUPLE": [
+              {
+                "TYPENAME": "SuiAddress"
+              },
+              "U64"
+            ]
+          }
         }
       }
     ]
@@ -2762,6 +2815,47 @@
             }
           ]
         }
+      },
+      "3": {
+        "Validity": {
+          "STRUCT": [
+            {
+              "min_epoch": {
+                "OPTION": "U64"
+              }
+            },
+            {
+              "max_epoch": {
+                "OPTION": "U64"
+              }
+            },
+            {
+              "min_timestamp": {
+                "OPTION": "U64"
+              }
+            },
+            {
+              "max_timestamp": {
+                "OPTION": "U64"
+              }
+            },
+            {
+              "chain": {
+                "TYPENAME": "ChainIdentifier"
+              }
+            },
+            {
+              "nonce": "U32"
+            },
+            {
+              "allowed_proposers": {
+                "OPTION": {
+                  "TYPENAME": "AllowedProposers"
+                }
+              }
+            }
+          ]
+        }
       }
     }
   },
@@ -3026,6 +3120,22 @@
       },
       "1": {
         "Sponsor": "UNIT"
+      },
+      "2": {
+        "SenderAllowance": {
+          "STRUCT": [
+            {
+              "funder": {
+                "TYPENAME": "SuiAddress"
+              }
+            },
+            {
+              "allowance": {
+                "TYPENAME": "ObjectID"
+              }
+            }
+          ]
+        }
       }
     }
   },

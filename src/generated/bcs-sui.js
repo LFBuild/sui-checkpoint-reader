@@ -64,6 +64,10 @@ export const ActiveJwk = bcs.struct('ActiveJwk', {
   epoch: bcs.u64(),
 })
 export const AdditionalConsensusStateDigest = Digest
+export const AllowedProposers = bcs.struct('AllowedProposers', {
+  epoch: bcs.u64(),
+  proposers: bcs.vector(bcs.u32()),
+})
 export const Argument = bcs.enum('Argument', {
   GasCoin: null,
   Input: bcs.u16(),
@@ -110,6 +114,10 @@ export const WithdrawalTypeArg = bcs.enum('WithdrawalTypeArg', {
 export const WithdrawFrom = bcs.enum('WithdrawFrom', {
   Sender: null,
   Sponsor: null,
+  SenderAllowance: bcs.struct('WithdrawFrom', {
+    funder: SuiAddress,
+    allowance: ObjectID,
+  }),
 })
 export const FundsWithdrawalArg = bcs.struct('FundsWithdrawalArg', {
   reservation: Reservation,
@@ -295,6 +303,10 @@ export const MovePackage = bcs.struct('MovePackage', {
   linkage_table: bcs.map(ObjectID, UpgradeInfo),
 })
 export const Data = bcs.enum('Data', { Move: MoveObject, Package: MovePackage })
+export const RawPartySerde = bcs.struct('RawPartySerde', {
+  default_permissions: bcs.u64(),
+  members: bcs.vector(bcs.tuple([SuiAddress, bcs.u64()])),
+})
 export const Owner = bcs.enum('Owner', {
   AddressOwner: SuiAddress,
   ObjectOwner: SuiAddress,
@@ -303,6 +315,10 @@ export const Owner = bcs.enum('Owner', {
   ConsensusAddressOwner: bcs.struct('Owner', {
     start_version: SequenceNumber,
     owner: SuiAddress,
+  }),
+  Party: bcs.struct('Owner', {
+    start_version: SequenceNumber,
+    permissions: RawPartySerde,
   }),
 })
 export const GenesisObject = bcs.enum('GenesisObject', {
@@ -366,6 +382,7 @@ export const EndOfEpochTransactionKind = bcs.enum('EndOfEpochTransactionKind', {
   DisplayRegistryCreate: null,
   AddressAliasStateCreate: null,
   WriteAccumulatorStorageCost,
+  ForwardingAddressRegistryCreate: null,
 })
 export const RandomnessRound = bcs.u64()
 export const RandomnessStateUpdate = bcs.struct('RandomnessStateUpdate', {
@@ -460,6 +477,15 @@ export const TransactionExpiration = bcs.enum('TransactionExpiration', {
     chain: ChainIdentifier,
     nonce: bcs.u32(),
   }),
+  Validity: bcs.struct('TransactionExpiration', {
+    min_epoch: bcs.option(bcs.u64()),
+    max_epoch: bcs.option(bcs.u64()),
+    min_timestamp: bcs.option(bcs.u64()),
+    max_timestamp: bcs.option(bcs.u64()),
+    chain: ChainIdentifier,
+    nonce: bcs.u32(),
+    allowed_proposers: bcs.option(AllowedProposers),
+  }),
 })
 export const TransactionDataV1 = bcs.lazy(() =>
   bcs.struct('TransactionDataV1', {
@@ -521,6 +547,7 @@ export const CommandArgumentError = bcs.enum('CommandArgumentError', {
   CannotMoveBorrowedValue: null,
   CannotWriteToExtendedReference: null,
   InvalidReferenceArgument: null,
+  InvalidTxContext: null,
 })
 export const TypeArgumentError = bcs.enum('TypeArgumentError', {
   TypeNotFound: null,
